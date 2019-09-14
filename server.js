@@ -1,5 +1,7 @@
 const express=require('express');
+const mongoose = require('mongoose');
 const bodyParser=require('body-parser');
+const passport = require("passport");
 
 const app=express();//create an express app
 
@@ -7,8 +9,7 @@ app.use(bodyParser.urlencoded({extended:true}))//for parsing application/x-www-f
 app.use(bodyParser.json())//for parsing application/json
 
 // Configuring the database
-const dbConfig = require('./config/database.config.js');
-const mongoose = require('mongoose');
+const dbConfig = require('./config/database.config');
 
 mongoose.Promise = global.Promise;
 
@@ -22,6 +23,14 @@ mongoose.connect(dbConfig.url, {
     process.exit();
 });
 
+const users = require('./app/routes/user.routes.js');
+
+// Passport middleware
+app.use(passport.initialize());
+// Passport config
+require("./config/passport.config.js")(passport);
+// Routes
+app.use("",users);
 
 // define a simple route
 app.get('/', (req, res) => {
