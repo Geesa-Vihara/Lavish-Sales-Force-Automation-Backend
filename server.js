@@ -43,6 +43,10 @@ app.get('/', (req, res) => {
     res.json({"message":"Welcome to Lavish Sales Force Automation System!"});
 });
 
+const salesRepRouter = require('./app/routes/salesRep.routes');
+
+app.use('/salesReps',salesRepRouter);
+
 // listen for requests
 app.listen(8000, () => {
     console.log("Server is listening on port 8000");
