@@ -6,9 +6,9 @@ const salesRep = require("../controllers/salesRep.controller.js");
 //add 
 router.post('/add',salesRep.add);
 //update
-router.post('/update/:id',salesRep.update);
+router.put('/update/:id',salesRep.update);
 //delete
-router.get('/delete/:id',salesRep.delete);
+router.delete('/delete/:id',salesRep.delete);
 //getall
 router.get('/',salesRep.getAll);
 //getbyid

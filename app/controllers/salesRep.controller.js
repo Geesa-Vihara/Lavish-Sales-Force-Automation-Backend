@@ -18,10 +18,10 @@ exports.add = (req,res) => {
 
     salesRep.save()                   
         .then(salesRep => {
-            res.status(200).json({'salesRep' : 'salesRep added successfuly !'});
+            res.status(200).json({salesRep});
         })
         .catch(err => {
-            res.status(400).send('Failed to add salesRep');
+            res.status(400).send({message:err.message || 'Failed to add salesRep'});
         });
         
 }
@@ -38,14 +38,14 @@ exports.update = (req,res)=>{
     } ,{new :true})
         .then(salesRep => {
             if(salesRep){
-                req.status(200).send("successfuly updated");  
+                res.status(200).send("successfuly updated");  
             }
             else{
-                req.status(400).send("cannot find salesRep with given id");
+                res.status(400).send("cannot find salesRep with given id");
             }
         })
         .catch(err => {
-            req.status(400).send("Error when updating salesRep data");
+            res.status(400).send("Error when updating salesRep data");
         });
 
 }
@@ -66,7 +66,7 @@ exports.delete = (req,res) => {
                 });       
         }
         else{
-            req.status(400).send("cannot find salesRep with given id");
+            res.status(400).send("cannot find salesRep with given id");
         }
         })
         .catch(err => {
@@ -84,14 +84,14 @@ exports.getAll = (req,res)=>{
             res.status(200).json(salesReps);
         })
         .catch(err => {
-            res.status(400).send("Cannot load data");
+            res.status(400).send("Error loading salesReps data");
         });
        
 }
 
 //get one salesRep data by id
 exports.getbyId = (req,res)=>{
-    
+
     SalesRep.findById(req.params.id)
         .then(salesRep => {
             res.status(200).json(salesRep);
