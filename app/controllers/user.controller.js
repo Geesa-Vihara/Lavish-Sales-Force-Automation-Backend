@@ -67,7 +67,9 @@ exports.register=(req,res)=>{
        } else {
          const newUser = new User({
            username: req.body.username,
-           fullname: req.body.fullname,  
+           nic:req.body.nic,
+           firstname: req.body.firstname,  
+           lastname: req.body.lastname,  
            email: req.body.email,
            telno: req.body.telno,
            address: req.body.address,
