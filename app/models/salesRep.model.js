@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 mongoose.set('useCreateIndex',true);
+//mongoose.set('useFindAndModify',false);
+
 
 const Schema = mongoose.Schema;         //defining schema
 const salesRepSchema = new Schema({
@@ -24,24 +26,28 @@ const salesRepSchema = new Schema({
         required : true,
     },
     area:{
-        type:String,
+        type : String,
         required : true,
     },
     address:{
-        type:String,
+        type : String,
         required : true,
 
     },
     phoneNo:{
-        type:String,
+        type : Number,
         required : true,
     },
     email:{
-        type:String,
+        type : String,
     },
+    password:{
+        type : String,
+        required : true
+    }
 },
     {
-    timestamps: true
+    timestamps : true
     }
 );
  

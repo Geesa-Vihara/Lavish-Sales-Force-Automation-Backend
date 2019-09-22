@@ -12,7 +12,8 @@ exports.add = (req,res) => {
         area     : req.body.area,
         address  : req.body.address,
         phoneNo  : req.body.phoneNo,
-        email    : req.body.email
+        email    : req.body.email,
+        password : req.body.password
 
     });
 
@@ -30,11 +31,17 @@ exports.add = (req,res) => {
 exports.update = (req,res)=>{
 
     SalesRep.findByIdAndUpdate(req.params.id ,{
-                userName : req.body.userName,
-                fullName : req.body.fullName,
-                area     : req.body.area,
-                address  : req.body.address,
-                phoneNo  : req.body.phoneNo
+        
+        id       : req.body.id,
+        userName : req.body.userName,
+        fullName : req.body.fullName,
+        nic      : req.body.nic,
+        area     : req.body.area,
+        address  : req.body.address,
+        phoneNo  : req.body.phoneNo,
+        email    : req.body.email,
+        password : req.body.password
+               
     } ,{new :true})
         .then(salesRep => {
             if(salesRep){
