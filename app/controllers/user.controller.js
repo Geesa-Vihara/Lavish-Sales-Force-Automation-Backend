@@ -1,13 +1,10 @@
-//pull required dependencies
 const bcrypt =require("bcryptjs");
 const jwt=require("jsonwebtoken");
 const config=require('../../config/database.config');
-//load User model
 const User=require("../models/user.model.js");
-
-//load login validation
 const validateLoginInput=require("../validation/login.validation.js");
 const validateRegisterInput=require("../validation/register.validation.js");
+const validatieUserProfile=require("../validation/user.profile.validation.js");
 
 exports.login=(req,res)=>{
     const {errors, isValid}=validateLoginInput(req.body);
@@ -61,7 +58,8 @@ exports.register=(req,res)=>{
      const { errors, isValid } = validateRegisterInput(req.body);// Check validation
      if (!isValid) {
        return res.status(400).json(errors);
-     }User.findOne({ username: req.body.username }).then(user => {
+     }
+     User.findOne({ username: req.body.username }).then(user => {
        if (user) {
          return res.status(400).json({ Username: "Username already exists" });
        } else {
@@ -88,3 +86,51 @@ exports.register=(req,res)=>{
        }
      });
 };
+
+exports.retrieve=(req,res)=>{
+  User.findOne({username:req.query.username}).then(user=>{
+    if(user){ 
+      const profile={
+        firstname:user.firstname,
+        lastname:user.lastname,
+        email:user.email,
+        telno:user.telno,
+        nic:user.nic,
+        address:user.address
+      }     
+      res.send(profile);
+    }else{
+      return res.status(400).json({ Username: "Username not found" });
+      
+    }
+  })
+};
+
+exports.update=(req,res)=>{
+  const {errors, isValid}=validatieUserProfile(req.body);
+  //check validation
+  if (!isValid){
+      return res.status(400).json(errors);
+  }
+    User.findOne({ username: req.body.username }).then(user => {
+      if (user) {
+        user.firstname=req.body.firstname,
+        user.lastname=req.body.lastname,
+        user.email=req.body.email,
+        user.telno=req.body.telno,
+        user.nic=req.body.nic,
+        user.address=req.body.address
+        user.save().then(user => {
+          res.json('User updated!');
+      })
+      .catch(err => {
+          res.status(400).send("Update not possible");
+      });
+
+      }else{
+        return res.status(400).json({ Username: "Username not found" });
+        
+      } 
+    });
+
+}
