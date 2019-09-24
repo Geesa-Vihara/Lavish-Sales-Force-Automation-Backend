@@ -1,30 +1,43 @@
-
+const bcrypt = require("bcryptjs");
 const config = require('../../config/database.config');
 const SalesRep = require("../models/salesRep.model.js");
 
 exports.add = (req,res) => {
 
-    const salesRep = new SalesRep({           //const salesRep = new SalesRep(req.body)
-        id       : req.body.id,
-        userName : req.body.userName,
-        fullName : req.body.fullName,
-        nic      : req.body.nic,
-        area     : req.body.area,
-        address  : req.body.address,
-        phoneNo  : req.body.phoneNo,
-        email    : req.body.email,
-        password : req.body.password
-
-    });
-
-    salesRep.save()                   
-        .then(salesRep => {
-            res.status(200).json({salesRep});
-        })
-        .catch(err => {
-            res.status(400).send({message:err.message || 'Failed to add salesRep'});
-        });
+    SalesRep.findOne({userName : req.body.userName}).then(salesRep => {
+        if(salesRep){
+            return res.status(400).send({username:'Already exists' });
+        }
+        else{
+            const salesRep = new SalesRep({           //const salesRep = new SalesRep(req.body)
+                // id       : req.body.id,
+                userName : req.body.userName,
+                fullName : req.body.fullName,
+                nic      : req.body.nic,
+                area     : req.body.area,
+                address  : req.body.address,
+                phoneNo  : req.body.phoneNo,
+                email    : req.body.email,
+                password : req.body.password
         
+            });
+            bcrypt.genSalt(10,(err,salt) => {
+                bcrypt.hash(salesRep.password,salt,(err,hash) => {
+                    if(err)
+                        throw err;
+                    salesRep.password = hash;
+                    salesRep
+                        .save()                   
+                        .then(salesRep => {
+                            res.status(200).json({salesRep});
+                        })
+                        .catch(err => {
+                            res.status(400).send({message:err.message || 'Failed to add salesRep'});
+                        });
+                })
+            })   
+        }
+    });      
 }
 
 
@@ -32,7 +45,7 @@ exports.update = (req,res)=>{
 
     SalesRep.findByIdAndUpdate(req.params.id ,{
         
-        id       : req.body.id,
+        //id       : req.body.id,
         userName : req.body.userName,
         fullName : req.body.fullName,
         nic      : req.body.nic,
