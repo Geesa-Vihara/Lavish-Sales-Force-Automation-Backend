@@ -197,4 +197,18 @@ exports.updateusername=(req,res)=>{
       }
     });
     }
+    exports.deleteaccount=(req,res)=>{
+            
+      User.findOne({ username: req.query.username}).then(user => {
+        if(user) {
+          user.remove();
+          return res.status(200).json({success:"Account deleted successfully" });
+          
+          
+        }else{
+          return res.status(400).json({error:"Username not found" });
+        }
+      });
+      }
+    
   

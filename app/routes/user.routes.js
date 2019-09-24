@@ -8,7 +8,7 @@ router.get('/retrieve',user.retrieve);
 router.put('/update',user.update); 
 router.put('/updateusername',user.updateusername);  
 router.put('/updatepassword',user.updatepassword);  
-
+router.delete('/deleteaccount',user.deleteaccount); 
 module.exports = router;
 
 
