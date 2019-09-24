@@ -5,7 +5,7 @@ const schemas = {
 
     salesRep : Joi.object().keys({
 
-        id       : Joi.number().required(),
+     //   id       : Joi.number().required(),
         userName : Joi.string().required(),
         fullName : Joi.string().required(),
         nic      : Joi.string().required(),

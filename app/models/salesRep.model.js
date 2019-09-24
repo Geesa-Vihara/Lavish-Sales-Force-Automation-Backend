@@ -6,16 +6,17 @@ mongoose.set('useCreateIndex',true);
 const Schema = mongoose.Schema;         //defining schema
 const salesRepSchema = new Schema({
 
-    id:{
+  /*  id:{
         type : Number,          // objectid??
         required : [true,"id field is required"],
         unique : true,
-    },
+    },*/
     userName:{
         type : String,
         required :[ true,"UserName field is required"],
         trim : true,
-        lowercase:true
+        lowercase:true,
+        unique : true,
     },
     fullName:{
         type : String,
