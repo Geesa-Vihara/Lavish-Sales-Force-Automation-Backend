@@ -1,12 +1,12 @@
 const bcrypt =require("bcryptjs");
 const jwt=require("jsonwebtoken");
-const config=require('../../config/database.config');
+const config=require('../../config/database.config.js');
 const User=require("../models/user.model.js");
 const validateLoginInput=require("../validation/login.validation.js");
 const validateRegisterInput=require("../validation/register.validation.js");
 const validateUserProfile=require("../validation/user.profile.validation.js");
-const validateNewUserName=require("../validation/newusername.validation");
-
+const validateNewUserName=require("../validation/newusername.validation.js");
+const validateNewPassword=require("../validation/newpassword.validation.js");
 exports.login=(req,res)=>{
     const {errors, isValid}=validateLoginInput(req.body);
     //check validation
@@ -165,3 +165,36 @@ exports.updateusername=(req,res)=>{
     }
   });
   }
+  exports.updatepassword=(req,res)=>{
+    const {passworderrors, isValid}=validateNewPassword(req.body);
+        
+    //check validation
+    if (!isValid){
+        return res.status(400).json(passworderrors);
+    }
+    
+    User.findOne({ username: req.body.username}).then(user => {
+      if (user) {
+        bcrypt.compare(req.body.currentpassword, user.password, function(err, match) {
+          if(match) {
+            bcrypt.genSalt(10, (err, salt) => {
+              bcrypt.hash(req.body.newpassword, salt, (err, hash) => {
+                if (err) throw err;
+                user.password = hash;
+                user
+                  .save()
+                  .then( res.json("Updated password"))
+                  .catch(err => console.log(err));
+              });
+            });
+          } else {
+            return res.status(400).json({ currentpassword: "Incorrect password" });
+          } 
+        });
+        
+      } else {
+        return res.status(400).json("Username not found" );
+      }
+    });
+    }
+  
