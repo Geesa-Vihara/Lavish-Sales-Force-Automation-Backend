@@ -4,7 +4,8 @@ const config=require('../../config/database.config');
 const User=require("../models/user.model.js");
 const validateLoginInput=require("../validation/login.validation.js");
 const validateRegisterInput=require("../validation/register.validation.js");
-const validatieUserProfile=require("../validation/user.profile.validation.js");
+const validateUserProfile=require("../validation/user.profile.validation.js");
+const validateNewUserName=require("../validation/newusername.validation");
 
 exports.login=(req,res)=>{
     const {errors, isValid}=validateLoginInput(req.body);
@@ -91,6 +92,7 @@ exports.retrieve=(req,res)=>{
   User.findOne({username:req.query.username}).then(user=>{
     if(user){ 
       const profile={
+        username:user.username,
         firstname:user.firstname,
         lastname:user.lastname,
         email:user.email,
@@ -107,7 +109,7 @@ exports.retrieve=(req,res)=>{
 };
 
 exports.update=(req,res)=>{
-  const {errors, isValid}=validatieUserProfile(req.body);
+  const {errors, isValid}=validateUserProfile(req.body);
   //check validation
   if (!isValid){
       return res.status(400).json(errors);
@@ -133,4 +135,33 @@ exports.update=(req,res)=>{
       } 
     });
 
-}
+};
+
+exports.updateusername=(req,res)=>{
+  const {newusernameerrors, isValid}=validateNewUserName(req.body);
+  //check validation
+  if (!isValid){
+      return res.status(400).json(newusernameerrors);
+  }
+  User.findOne({ username: { $eq: req.body.newusername } }).then(user => {
+    if (user) {
+      return res.status(400).json({ newusername: "Username already exists" });
+      
+    } else {
+      if(req.body.username===req.body.newusername){
+        return res.status(400).json({ newusername: "Username already exists" });
+      }
+      else{
+        User.findOne({ username: req.body.username }).then(user=>{
+          user.username=req.body.newusername;
+          user.save().then(
+            res.json('Username updated!'))
+            .catch(err => {
+              res.status(400).send("Update not possible");
+          });
+      
+      })
+      }    
+    }
+  });
+  }
