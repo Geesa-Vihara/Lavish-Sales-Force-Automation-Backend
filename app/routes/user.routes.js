@@ -7,6 +7,7 @@ router.post('/register',user.register);
 router.get('/retrieve',user.retrieve);
 router.put('/update',user.update); 
 router.put('/updateusername',user.updateusername);  
+router.put('/updatepassword',user.updatepassword);  
 
 module.exports = router;
 
