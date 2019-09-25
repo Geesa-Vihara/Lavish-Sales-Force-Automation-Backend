@@ -56,13 +56,13 @@ exports.login=(req,res)=>{
 
 exports.register=(req,res)=>{
      // Form validation
-     const { errors, isValid } = validateRegisterInput(req.body);// Check validation
+     const { registererrors, isValid } = validateRegisterInput(req.body);// Check validation
      if (!isValid) {
-       return res.status(400).json(errors);
+       return res.status(400).json(registererrors);
      }
      User.findOne({ username: req.body.username }).then(user => {
        if (user) {
-         return res.status(400).json({ Username: "Username already exists" });
+         return res.status(400).json({ username: "username already exists" });
        } else {
          const newUser = new User({
            username: req.body.username,
