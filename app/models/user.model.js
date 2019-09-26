@@ -33,6 +33,10 @@ const UserSchema = mongoose.Schema({
       type: String,
       required: true
     },
+    image: {
+      type: String,
+      default:"newuser.png"
+    },
   },{
     timestamps: true
   });
