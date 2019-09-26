@@ -1,12 +1,38 @@
 const bcrypt =require("bcryptjs");
 const jwt=require("jsonwebtoken");
 const config=require('../../config/database.config.js');
+const multer=require("multer");
 const User=require("../models/user.model.js");
 const validateLoginInput=require("../validation/login.validation.js");
 const validateRegisterInput=require("../validation/register.validation.js");
 const validateUserProfile=require("../validation/user.profile.validation.js");
 const validateNewUserName=require("../validation/newusername.validation.js");
 const validateNewPassword=require("../validation/newpassword.validation.js");
+const path = require("path");
+
+const storage = multer.diskStorage({
+  destination: "app/images",
+  filename: function(req, file, cb){
+     cb(null,"IMAGE-" + Date.now() + path.extname(file.originalname));
+  }
+});
+const upload=multer({
+  storage: storage,
+  limits:{
+    fileSize: 1000000,
+    
+  },
+  fileFilter: (req, file, cb) => {
+    var type = file.mimetype;
+    var typeArray = type.split("/");
+    if(typeArray[0] !== "image"){
+      return cb(null,false)
+    }
+    return cb(null,true);
+   
+}
+}).single("myImage");
+
 exports.login=(req,res)=>{
     const {errors, isValid}=validateLoginInput(req.body);
     //check validation
@@ -98,9 +124,11 @@ exports.retrieve=(req,res)=>{
         email:user.email,
         telno:user.telno,
         nic:user.nic,
-        address:user.address
+        address:user.address,
+        
       }     
-      res.send(profile);
+      
+      return res.status(200).json(profile);
     }else{
       return res.status(400).json({ Username: "Username not found" });
       
@@ -165,50 +193,92 @@ exports.updateusername=(req,res)=>{
     }
   });
   }
-  exports.updatepassword=(req,res)=>{
-    const {passworderrors, isValid}=validateNewPassword(req.body);
+exports.updatepassword=(req,res)=>{
+const {passworderrors, isValid}=validateNewPassword(req.body);
+    
+//check validation
+if (!isValid){
+    return res.status(400).json(passworderrors);
+}
+
+User.findOne({ username: req.body.username}).then(user => {
+  if (user) {
+    bcrypt.compare(req.body.currentpassword, user.password, function(err, match) {
+      if(match) {
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(req.body.newpassword, salt, (err, hash) => {
+            if (err) throw err;
+            user.password = hash;
+            user
+              .save()
+              .then( res.json("Updated password"))
+              .catch(err => console.log(err));
+          });
+        });
+      } else {
+        return res.status(400).json({ currentpassword: "Incorrect password" });
+      } 
+    });
+    
+  } else {
+    return res.status(400).json("Username not found" );
+  }
+});
+}
+exports.deleteaccount=(req,res)=>{
         
-    //check validation
-    if (!isValid){
-        return res.status(400).json(passworderrors);
+  User.findOne({ username: req.query.username}).then(user => {
+    if(user) {
+      user.remove();
+      return res.status(200).json({success:"Account deleted successfully" });
+      
+      
+    }else{
+      return res.status(400).json({error:"Username not found" });
     }
+  });
+  }
+
+  exports.storeimage=(req,res)=>upload(req,res,(err)=>{
     
     User.findOne({ username: req.body.username}).then(user => {
-      if (user) {
-        bcrypt.compare(req.body.currentpassword, user.password, function(err, match) {
-          if(match) {
-            bcrypt.genSalt(10, (err, salt) => {
-              bcrypt.hash(req.body.newpassword, salt, (err, hash) => {
-                if (err) throw err;
-                user.password = hash;
-                user
-                  .save()
-                  .then( res.json("Updated password"))
-                  .catch(err => console.log(err));
-              });
-            });
-          } else {
-            return res.status(400).json({ currentpassword: "Incorrect password" });
-          } 
-        });
+      if(user) {
         
-      } else {
-        return res.status(400).json("Username not found" );
+        if(!req.file){
+          return res.status(400).json({picupdate:"Image file required to update or image size too large to upload"});
+        }
+        
+        else if(err){          
+          return res.status(400).json({picupdate:"Update not possible"});
+        }
+        else{
+          user.image=req.file.filename;
+          user.save().then( res.json(req.file))
+          .catch(err => console.log(err));
+          
+         
+        }
+      }else{        
+        return res.status(400).json({error:"Username not found" });
       }
     });
-    }
-    exports.deleteaccount=(req,res)=>{
-            
-      User.findOne({ username: req.query.username}).then(user => {
-        if(user) {
-          user.remove();
-          return res.status(200).json({success:"Account deleted successfully" });
-          
-          
-        }else{
-          return res.status(400).json({error:"Username not found" });
-        }
-      });
-      }
-    
   
+    
+});
+
+
+exports.getimage=(req,res)=>{
+  User.findOne({ username:req.params.username}).then(user => {
+    if(user) {
+      
+      res.sendFile(user.image,{ root: "app/images" });
+      
+      
+    }else{
+      return res.status(400).json({error:"Username not found" });
+    }
+  });
+  
+} 
+
+ 
