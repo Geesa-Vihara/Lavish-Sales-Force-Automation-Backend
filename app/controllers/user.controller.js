@@ -9,6 +9,7 @@ const validateUserProfile=require("../validation/user.profile.validation.js");
 const validateNewUserName=require("../validation/newusername.validation.js");
 const validateNewPassword=require("../validation/newpassword.validation.js");
 const path = require("path");
+const fs=require("fs");
 
 const storage = multer.diskStorage({
   destination: "app/images",
@@ -252,6 +253,9 @@ exports.deleteaccount=(req,res)=>{
           return res.status(400).json({picupdate:"Update not possible"});
         }
         else{
+          if(user.image!=="newuser.png"){
+            fs.unlinkSync("app/images/"+user.image);
+          }
           user.image=req.file.filename;
           user.save().then( res.json(req.file))
           .catch(err => console.log(err));
