@@ -18,13 +18,13 @@ module.exports = function validateRegisterInput(data) {
     registererrors.username = "Username field is required";
   }
   if (Validator.isEmpty(data.firstname)) {
-    registererrors.firstname = "First name field is required";
+    registererrors.firstname = "Firstname field is required";
   }
   if (Validator.isEmpty(data.lastname)) {
-    registererrors.lastname = "Last name field is required";
+    registererrors.lastname = "Lastname field is required";
   }
   if (Validator.isEmpty(data.nic)) {
-    registererrors.nic = "NIC name field is required";
+    registererrors.nic = "NIC field is required";
   }
   if (Validator.isEmpty(data.telno)) {
     registererrors.telno = "Telephone number field is required";

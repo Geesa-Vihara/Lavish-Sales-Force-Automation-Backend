@@ -56,14 +56,14 @@ exports.login=(req,res)=>{
                 // Create JWT Payload
                 const payload={
                     id: user.id,
-                    name:user.name
+                    name:user.username
                 };
                 //sign token
                 jwt.sign(
                     payload,
                     config.secretOrKey,
                     {
-                        expiresIn:31556926 //1 year in seconds
+                        expiresIn: 86400//1 day in seconds
                     },
                     (err,token)=>{
                         res.json({
@@ -78,6 +78,8 @@ exports.login=(req,res)=>{
                 .json({incorrect: "Incorrect Username or password"});
             }
         });
+    }).catch(err=>{
+      return res.status(400).json(err)
     });
 };
 
@@ -112,11 +114,13 @@ exports.register=(req,res)=>{
            });
          });
        }
-     });
+     }).catch(err=>{
+      return res.status(400).json(err)
+});
 };
 
 exports.retrieve=(req,res)=>{
-  User.findOne({username:req.query.username}).then(user=>{
+  User.findOne({username:req.decoded.name}).then(user=>{
     if(user){ 
       const profile={
         username:user.username,
@@ -134,7 +138,9 @@ exports.retrieve=(req,res)=>{
       return res.status(400).json({ Username: "Username not found" });
       
     }
-  })
+  }).catch(err=>{
+    return res.status(400).json(err)
+});
 };
 
 exports.update=(req,res)=>{
@@ -143,7 +149,7 @@ exports.update=(req,res)=>{
   if (!isValid){
       return res.status(400).json(errors);
   }
-    User.findOne({ username: req.body.username }).then(user => {
+    User.findOne({ username: req.decoded.name }).then(user => {
       if (user) {
         user.firstname=req.body.firstname,
         user.lastname=req.body.lastname,
@@ -162,7 +168,9 @@ exports.update=(req,res)=>{
         return res.status(400).json({ Username: "Username not found" });
         
       } 
-    });
+    }).catch(err=>{
+      return res.status(400).json(err)
+});;
 
 };
 
@@ -172,28 +180,25 @@ exports.updateusername=(req,res)=>{
   if (!isValid){
       return res.status(400).json(newusernameerrors);
   }
-  User.findOne({ username: { $eq: req.body.newusername } }).then(user => {
-    if (user) {
+  User.findOne({ username: req.body.newusername  }).then(user => {
+    if(!user){
+      User.findOne({ username: req.decoded.name }).then(user=>{
+        user.username=req.body.newusername;
+        user.save().then(
+          res.json('Username updated!'))
+          .catch(err => {
+            res.status(400).send("Update not possible");
+            });
+      }) 
+    }    
+    else{
       return res.status(400).json({ newusername: "Username already exists" });
-      
-    } else {
-      if(req.body.username===req.body.newusername){
-        return res.status(400).json({ newusername: "Username already exists" });
-      }
-      else{
-        User.findOne({ username: req.body.username }).then(user=>{
-          user.username=req.body.newusername;
-          user.save().then(
-            res.json('Username updated!'))
-            .catch(err => {
-              res.status(400).send("Update not possible");
-          });
-      
-      })
-      }    
     }
+  }).catch(err=>{
+    return res.status(400).json(err)
   });
   }
+  
 exports.updatepassword=(req,res)=>{
 const {passworderrors, isValid}=validateNewPassword(req.body);
     
@@ -202,7 +207,7 @@ if (!isValid){
     return res.status(400).json(passworderrors);
 }
 
-User.findOne({ username: req.body.username}).then(user => {
+User.findOne({ username: req.decoded.name}).then(user => {
   if (user) {
     bcrypt.compare(req.body.currentpassword, user.password, function(err, match) {
       if(match) {
@@ -224,11 +229,13 @@ User.findOne({ username: req.body.username}).then(user => {
   } else {
     return res.status(400).json("Username not found" );
   }
+}).catch(err=>{
+  return res.status(400).json(err)
 });
 }
 exports.deleteaccount=(req,res)=>{
         
-  User.findOne({ username: req.query.username}).then(user => {
+  User.findOne({ username: req.decoded.name}).then(user => {
     if(user) {
       user.remove();
       return res.status(200).json({success:"Account deleted successfully" });
@@ -237,12 +244,14 @@ exports.deleteaccount=(req,res)=>{
     }else{
       return res.status(400).json({error:"Username not found" });
     }
+  }).catch(err=>{
+    return res.status(400).json(err)
   });
   }
 
   exports.storeimage=(req,res)=>upload(req,res,(err)=>{
     
-    User.findOne({ username: req.body.username}).then(user => {
+    User.findOne({ username: req.decoded.name}).then(user => {
       if(user) {
         
         if(!req.file){
@@ -265,6 +274,8 @@ exports.deleteaccount=(req,res)=>{
       }else{        
         return res.status(400).json({error:"Username not found" });
       }
+    }).catch(err=>{
+      return res.status(400).json(err)
     });
   
     
@@ -272,7 +283,8 @@ exports.deleteaccount=(req,res)=>{
 
 
 exports.getimage=(req,res)=>{
-  User.findOne({ username:req.params.username}).then(user => {
+  
+  User.findOne({ username:req.decoded.name}).then(user => {
     if(user) {
       
       res.sendFile(user.image,{ root: "app/images" });
@@ -281,7 +293,9 @@ exports.getimage=(req,res)=>{
     }else{
       return res.status(400).json({error:"Username not found" });
     }
-  });
+  }).catch(err=>{
+    return res.status(400).json(err)
+  });;
   
 } 
 
