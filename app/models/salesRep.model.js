@@ -6,11 +6,6 @@ mongoose.set('useCreateIndex',true);
 const Schema = mongoose.Schema;         //defining schema
 const salesRepSchema = new Schema({
 
-  /*  id:{
-        type : Number,          // objectid??
-        required : [true,"id field is required"],
-        unique : true,
-    },*/
     userName:{
         type : String,
         required :[ true,"UserName field is required"],
@@ -36,7 +31,7 @@ const salesRepSchema = new Schema({
 
     },
     phoneNo:{
-        type : Number,
+        type : String,
         required : true,
     },
     email:{
