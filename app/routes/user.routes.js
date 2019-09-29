@@ -1,16 +1,17 @@
 const express=require("express");
 const router=express.Router();
 const user=require("../controllers/user.controller.js");
+const verifyToken=require("../auth/verifyToken.js");
 
 router.post('/login',user.login);
-router.post('/register',user.register);
-router.get('/retrieve',user.retrieve);
-router.get("/getimage/:username", user.getimage);
-router.put('/update',user.update); 
-router.put('/updateusername',user.updateusername);  
-router.put('/updatepassword',user.updatepassword);  
-router.delete('/deleteaccount',user.deleteaccount); 
-router.post('/storeimage',user.storeimage)
+router.post('/register',verifyToken,user.register);
+router.get('/retrieve',verifyToken, user.retrieve);
+router.get("/getimage/:token",verifyToken, user.getimage);
+router.put('/update',verifyToken,user.update); 
+router.put('/updateusername',verifyToken,user.updateusername);  
+router.put('/updatepassword',verifyToken,user.updatepassword);  
+router.delete('/deleteaccount',verifyToken,user.deleteaccount); 
+router.post('/storeimage',verifyToken,user.storeimage)
 module.exports = router;
 
 
