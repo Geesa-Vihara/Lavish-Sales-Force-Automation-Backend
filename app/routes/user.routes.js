@@ -4,6 +4,8 @@ const user=require("../controllers/user.controller.js");
 const verifyToken=require("../auth/verifyToken.js");
 
 router.post('/login',user.login);
+router.post('/forgotpassword',user.forgotpassword);
+router.post('/resetpassword',user.resetpassword);
 router.post('/register',verifyToken,user.register);
 router.get('/retrieve',verifyToken, user.retrieve);
 router.get("/getimage/:token",verifyToken, user.getimage);
