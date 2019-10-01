@@ -2,14 +2,18 @@ const bcrypt =require("bcryptjs");
 const jwt=require("jsonwebtoken");
 const config=require('../../config/database.config.js');
 const multer=require("multer");
+const path = require("path");
+const fs=require("fs");
+const nodemailer=require("nodemailer");
+
 const User=require("../models/user.model.js");
 const validateLoginInput=require("../validation/login.validation.js");
+const validateForgotPassword=require("../validation/forgotpassword.validation.js");
 const validateRegisterInput=require("../validation/register.validation.js");
 const validateUserProfile=require("../validation/user.profile.validation.js");
 const validateNewUserName=require("../validation/newusername.validation.js");
 const validateNewPassword=require("../validation/newpassword.validation.js");
-const path = require("path");
-const fs=require("fs");
+const validateResetPassword=require("../validation/resetpassword.validation.js")
 
 const storage = multer.diskStorage({
   destination: "app/images",
@@ -82,6 +86,98 @@ exports.login=(req,res)=>{
       return res.status(400).json(err)
     });
 };
+
+exports.forgotpassword=(req,res)=>{
+  const {errors, isValid}=validateForgotPassword(req.body);
+    //check validation
+    if (!isValid){
+        return res.status(400).json(errors);
+    }
+    User.findOne({email:req.body.email}).then(user=>{
+      if(!user){
+        return res.status(400).json({ email: "Can't find the email" });
+
+      }
+      
+      const token=jwt.sign(
+      {email:user.email},
+      config.secretOrKey,
+      {
+          expiresIn: 3600//1 hour in seconds
+      }        
+      );
+      
+      const transporter=nodemailer.createTransport({
+        service:'gmail',
+        auth:{
+          user: `lavish.tea.pvt.ltd@gmail.com`,
+          pass: `lavish123`,
+        }
+      });
+
+      const mailOptions={
+        from:`lavish.tea.pvt.ltd@gmail.com`,
+        to:`${user.email}`,
+        subject:`Link to reset password`,
+        text:
+        `We have received a request to reset password for your account.\n\n`+
+        `Please click on the following link to complete the process within one hour of recieving it:\n\n`+
+        `http://localhost:3000/resetpassword/${token}\n\n`+
+          `It can be safely ignored if you didn't request this.\n`
+      };
+      transporter.sendMail(mailOptions,function(err){
+        if(err){
+          console.log(err);
+          return res.status(400).json({email:"Could not send email"});
+        }else{
+          return res.status(200).json({correct:"Reset link sent check your email"});
+        }
+      })
+    }).catch(err=>{
+      return res.status(400).json(err)
+    })
+
+
+}
+
+exports.resetpassword=(req,res)=>{
+  const {errors, isValid}=validateResetPassword(req.body);
+  if (!isValid){
+    return res.status(400).json(errors);
+  }
+  if(req.body.token){
+    jwt.verify(req.body.token,config.secretOrKey,function(err,decoded){
+      if(err && err.name === 'TokenExpiredError'){
+          return res.status(400).send({incorrect:"Reset link expired"});
+      }
+      else if(err){
+          return res.status(400).send({incorrect:"Can't verify link"});
+
+      }
+      else{
+        User.findOne({email:decoded.email}).then(user=>{
+          if(!user){
+            return res.status(400).json({ password: "Can't find the email" });
+          }
+          bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(req.body.password, salt, (err, hash) => {
+              if (err) throw err;
+              user.password = hash;
+              user
+                .save()
+                .then( res.json({correct:"Updated password successfully please login again"}))
+                .catch(err => console.log(err));
+            });
+          });
+    
+    
+        }).catch(err=>{
+          return res.status(400).json(err)
+        })
+      }
+      })
+  }
+}
 
 exports.register=(req,res)=>{
      // Form validation
