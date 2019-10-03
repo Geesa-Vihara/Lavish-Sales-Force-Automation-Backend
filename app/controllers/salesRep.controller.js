@@ -65,7 +65,7 @@ exports.update = (req,res)=>{
             }
         })
         .catch(err => {
-            res.status(400).send("Error when updating salesRep data");
+            res.status(400).json(err);
         });
 
 }
@@ -90,7 +90,7 @@ exports.delete = (req,res) => {
         }
         })
         .catch(err => {
-            res.status(400).send("Error when deleting data");
+            res.status(400).json(err);
         });
 
 
