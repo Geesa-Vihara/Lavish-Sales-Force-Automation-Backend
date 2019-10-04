@@ -9,12 +9,12 @@ const verifyToken = require("../auth/verifyToken.js");
 //add  
 router.post('/add',verifyToken,middleware(schemas.salesRep),salesRep.add);
 //update
-router.put('/update/:id',middleware(schemas.salesRep),salesRep.update);    // request body validating
+router.put('/update/:id',middleware(schemas.salesRepUpdate),salesRep.update);    // request body validating
 //delete
 router.delete('/delete/:id',verifyToken,salesRep.delete);
 //getall
 router.get('/',verifyToken,salesRep.getAll);
 //getbyid
-router.get('/:id',salesRep.getbyId);   
+router.get('/:id',verifyToken,salesRep.getbyId);   
 
 module.exports =router;
