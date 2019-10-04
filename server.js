@@ -48,7 +48,7 @@ app.get('/', (req, res) => {
 
 const salesRepRouter = require('./app/routes/salesRep.routes');
 
-app.use('/salesReps',salesRepRouter);
+app.use('/salesreps',salesRepRouter);
 
 // listen for requests
 app.listen(8000, () => {

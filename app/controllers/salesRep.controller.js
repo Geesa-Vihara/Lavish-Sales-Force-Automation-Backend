@@ -10,7 +10,6 @@ exports.add = (req,res) => {
         }
         else{
             const salesRep = new SalesRep({           //const salesRep = new SalesRep(req.body)
-                // id       : req.body.id,
                 userName : req.body.userName,
                 fullName : req.body.fullName,
                 nic      : req.body.nic,
@@ -104,7 +103,7 @@ exports.getAll = (req,res)=>{
             res.status(200).json(salesReps);
         })
         .catch(err => {
-            res.status(400).send("Error loading salesReps data");
+            res.status(400).json(err);
         });
        
 }
@@ -114,9 +113,14 @@ exports.getbyId = (req,res)=>{
 
     SalesRep.findById(req.params.id)
         .then(salesRep => {
-            res.status(200).json(salesRep);
+            if(salesRep){
+                res.status(200).json(salesRep);
+            }
+            else{
+                res.status(400).send("cannot find salesRep with given id");
+            }
         })
         .catch(err => {
-            res.status(400).send("Error loading salesRep data");
+            res.status(400).json(err);
         });
 }
