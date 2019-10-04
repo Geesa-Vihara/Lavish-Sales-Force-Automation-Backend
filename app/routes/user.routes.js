@@ -14,6 +14,7 @@ router.put('/updateusername',verifyToken,user.updateusername);
 router.put('/updatepassword',verifyToken,user.updatepassword);  
 router.delete('/deleteaccount',verifyToken,user.deleteaccount); 
 router.post('/storeimage',verifyToken,user.storeimage)
+
 module.exports = router;
 
 
