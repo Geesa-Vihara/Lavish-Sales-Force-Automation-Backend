@@ -5,6 +5,7 @@ const multer=require("multer");
 const path = require("path");
 const fs=require("fs");
 const nodemailer=require("nodemailer");
+require('dotenv').config();
 
 const User=require("../models/user.model.js");
 const validateLoginInput=require("../validation/login.validation.js");
@@ -110,13 +111,13 @@ exports.forgotpassword=(req,res)=>{
       const transporter=nodemailer.createTransport({
         service:'gmail',
         auth:{
-          user: `lavish.tea.pvt.ltd@gmail.com`,
-          pass: `lavish123`,
+          user: `${process.env.FORGOT_EMAIL}`,
+          pass: `${process.env.FORGOT_PASSWORD}`,
         }
       });
 
       const mailOptions={
-        from:`lavish.tea.pvt.ltd@gmail.com`,
+        from:`${process.env.FORGOT_EMAIL}`,
         to:`${user.email}`,
         subject:`Link to reset password`,
         text:

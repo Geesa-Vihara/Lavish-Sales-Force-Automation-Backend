@@ -1,4 +1,6 @@
+require('dotenv').config();
+
 module.exports = {
-    url: 'mongodb://localhost:27017/lavish_SFA',
-    secretOrKey: "secret"
+    url: `${process.env.DBURL}`,
+    secretOrKey: `${process.env.SECRETORKEY}`
 }
