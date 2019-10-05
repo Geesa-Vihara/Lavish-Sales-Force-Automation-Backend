@@ -186,9 +186,15 @@ exports.register=(req,res)=>{
      if (!isValid) {
        return res.status(400).json(registererrors);
      }
-     User.findOne({ username: req.body.username }).then(user => {
+     User.findOne({$or:[{ username: req.body.username },{email:req.body.email}]}).then(user => {
        if (user) {
-         return res.status(400).json({ username: "username already exists" });
+         if(user.username===req.body.username && user.email===req.body.email){
+          return res.status(400).json([{ username: "Username already exists" },{ email: "Email already exists" }]);
+         }else if(user.username===req.body.username){
+          return res.status(400).json({ username: "Username already exists" });
+         }else if(user.email===req.body.email){
+          return res.status(400).json({ email: "Email already exists" });
+         }
        } else {
          const newUser = new User({
            username: req.body.username,
