@@ -7,11 +7,11 @@ const verifyToken=function(req,res,next){
         token = token.slice(6, token.length);
       }
     if(!token){
-        return res.status(404).send({message:"No token available"});
+        return res.status(404).send({tokenmessage:"No token available"});
     }else{
         jwt.verify(token,config.secretOrKey,function(err,decoded){
             if(err){
-                return res.status(404).send({message:"Failed to authenticate token"});
+                return res.status(404).send({tokenmessage:"Failed to authenticate token"});
         
             }
             req.decoded=decoded;

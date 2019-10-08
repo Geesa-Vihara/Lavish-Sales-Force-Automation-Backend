@@ -84,6 +84,7 @@ exports.login=(req,res)=>{
             }
         });
     }).catch(err=>{
+      console.error("error found!!!"+err);
       return res.status(400).json(err)
     });
 };
@@ -135,6 +136,7 @@ exports.forgotpassword=(req,res)=>{
         }
       })
     }).catch(err=>{
+      console.error("error found!!!"+err);
       return res.status(400).json(err)
     })
 
@@ -173,6 +175,7 @@ exports.resetpassword=(req,res)=>{
     
     
         }).catch(err=>{
+          console.error("error found!!!"+err);
           return res.status(400).json(err)
         })
       }
@@ -218,12 +221,14 @@ exports.register=(req,res)=>{
          });
        }
      }).catch(err=>{
+      console.error("error found!!!"+err);
       return res.status(400).json(err)
 });
 };
 
 exports.retrieve=(req,res)=>{
   User.findOne({username:req.decoded.name}).then(user=>{
+    
     if(user){ 
       const profile={
         username:user.username,
@@ -238,10 +243,12 @@ exports.retrieve=(req,res)=>{
       
       return res.status(200).json(profile);
     }else{
+      console.log("hahahah");
       return res.status(400).json({ Username: "Username not found" });
       
     }
   }).catch(err=>{
+    console.error("error found!!!"+err);
     return res.status(400).json(err)
 });
 };
@@ -272,6 +279,7 @@ exports.update=(req,res)=>{
         
       } 
     }).catch(err=>{
+      console.error("error found!!!"+err);
       return res.status(400).json(err)
 });;
 
@@ -298,6 +306,7 @@ exports.updateusername=(req,res)=>{
       return res.status(400).json({ newusername: "Username already exists" });
     }
   }).catch(err=>{
+    console.error("error found!!!"+err);
     return res.status(400).json(err)
   });
   }
@@ -333,6 +342,7 @@ User.findOne({ username: req.decoded.name}).then(user => {
     return res.status(400).json("Username not found" );
   }
 }).catch(err=>{
+  console.error("error found!!!"+err);
   return res.status(400).json(err)
 });
 }
@@ -348,6 +358,7 @@ exports.deleteaccount=(req,res)=>{
       return res.status(400).json({error:"Username not found" });
     }
   }).catch(err=>{
+    console.error("error found!!!"+err);
     return res.status(400).json(err)
   });
   }
@@ -378,6 +389,7 @@ exports.deleteaccount=(req,res)=>{
         return res.status(400).json({error:"Username not found" });
       }
     }).catch(err=>{
+      console.error("error found!!!"+err);
       return res.status(400).json(err)
     });
   
@@ -397,6 +409,7 @@ exports.getimage=(req,res)=>{
       return res.status(400).json({error:"Username not found" });
     }
   }).catch(err=>{
+    console.error("error found!!!"+err);
     return res.status(400).json(err)
   });;
   
