@@ -1,7 +1,6 @@
 const express=require('express');
 const mongoose = require('mongoose');
 const bodyParser=require('body-parser');
-const passport = require("passport");
 
 const app=express();//create an express app
 
@@ -14,17 +13,17 @@ const dbConfig = require('./config/database.config');
 mongoose.Promise = global.Promise;
 
 // Connecting to the database
-mongoose.connect(dbConfig.url, {
-    
+mongoose.connect(dbConfig.url, {    
     useNewUrlParser: true,
     useUnifiedTopology: true
 
-}).then(() => {
-    console.log("Successfully connected to the database");    
-}).catch(err => {
-    console.log('Could not connect to the database. Exiting now...', err);
-    process.exit();
-});
+},err=>{
+    if(err){
+        console.error("Error found-"+err);
+    }else{
+        console.log("Successfully connected to the database")
+    }
+})
 
 const users = require('./app/routes/user.routes.js');
 
@@ -34,10 +33,6 @@ app.use(function(req, res, next) {
     next();
     });
 
-// Passport middleware
-app.use(passport.initialize());
-// Passport config
-require("./config/passport.config.js")(passport);
 // Routes
 app.use("",users);
 
