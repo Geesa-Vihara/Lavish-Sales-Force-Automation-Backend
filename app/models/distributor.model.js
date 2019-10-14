@@ -43,5 +43,5 @@ const distributorSchema = new Schema({
     timestamps : true
     }
 );
-const Distributor = mongooese.model('distributors',distributorSchema);
+const Distributor = mongoose.model('distributors',distributorSchema);
 module.exports = Distributor;

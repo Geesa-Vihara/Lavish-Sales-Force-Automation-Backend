@@ -1,4 +1,4 @@
-const bcrypt = require("bycrypt.js");
+const bcrypt = require("bcryptjs");
 const Distributor = require("../models/distributor.model");
 const validateDistributor = require("../validation/distributor.validation");
 
@@ -97,7 +97,7 @@ exports.delete = (req,res) => {
 exports.getAll = (req,res) => {
     Distributor
         .find()
-        then(distributors => {
+        .then(distributors => {
             res.status(200).json(distributors);
         })
         .catch(err => {
