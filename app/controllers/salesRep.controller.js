@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 //const config = require('../../config/database.config');
-const salesRep = require("../models/salesRep.model.js");
+const SalesRep = require("../models/salesRep.model.js");
 const validateAddSalesrep=require("../validation/salesrepAdd.validation.js");
 const validateUpdateSalesrep=require("../validation/salesrepUpdate.validation.js");
 
@@ -10,15 +10,15 @@ exports.add = (req,res) => {
     if(!isValid){
         return res.status(400).json(errors);
     }
-    salesRep
-        .findOne({SalesRepName : req.body.SalesRepName})
+    SalesRep
+        .findOne({userName : req.body.userName})
         .then(salesRep => {
             if(salesRep){
                 return res.status(400).json({SalesRepname:'Already exists' });
             }
             else{
                 const salesRep = new salesRep({           //const salesRep = new salesRep(req.body)
-                    SalesRepName : req.body.SalesRepName,
+                    userName : req.body.userName,
                     fullName : req.body.fullName,
                     nic      : req.body.nic,
                     area     : req.body.area,
@@ -59,9 +59,9 @@ exports.update = (req,res)=>{
         console.log(errors);
         return res.status(400).json(errors);
     }
-    salesRep
+    SalesRep
         .findByIdAndUpdate(req.params.id ,{
-            SalesRepName : req.body.SalesRepName,
+            userName : req.body.userName,
             fullName : req.body.fullName,
             nic      : req.body.nic,
             area     : req.body.area,
@@ -88,17 +88,12 @@ exports.update = (req,res)=>{
 // Remove salesREp from system
 exports.delete = (req,res) => {
 
-    salesRep
-        .findByIdAndRemove(req.params.id)
+    SalesRep
+        .findById(req.params.id)
         .then(salesRep => {
             if(salesRep){
-                salesRep.save()                   
-                .then(salesRep => {
-                    res.status(200).json({'salesRep' : 'salesRep deleted successfuly !'});
-                })
-                .catch(err => {
-                    res.status(400).send('Failed to delete salesRep');
-                });       
+                salesRep.remove()                   
+                res.status(200).json({'salesRep' : 'salesRep deleted successfuly !'});   
             }
             else{
                 res.status(400).send("cannot find salesRep with given id");
@@ -114,7 +109,7 @@ exports.delete = (req,res) => {
 //geting all salesrep data to table
 exports.getAll = (req,res)=>{  
 
-    salesRep
+    SalesRep
         .find()
         .then(salesReps => {
             res.status(200).json(salesReps);
@@ -128,7 +123,7 @@ exports.getAll = (req,res)=>{
 //get one salesRep data by id
 exports.getbyId = (req,res)=>{
 
-    salesRep
+    SalesRep
         .findById(req.params.id)
         .then(salesRep => {
             if(salesRep){
