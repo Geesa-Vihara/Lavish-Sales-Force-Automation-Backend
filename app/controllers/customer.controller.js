@@ -96,7 +96,7 @@ exports.delete = (req,res) => {
 exports.getAll = (req,res) => {
     Customer
         .find()
-        then(customers => {
+        .then(customers => {
             res.status(200).json(customers);
         })
         .catch(err => {
