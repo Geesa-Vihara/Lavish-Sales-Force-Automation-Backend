@@ -346,7 +346,7 @@ User.findOne({ username: req.decoded.name}).then(user => {
   return res.status(400).json(err)
 });
 }
-exports.deleteaccount=(req,res)=>{
+/*exports.deleteaccount=(req,res)=>{
         
   User.findOne({ username: req.decoded.name}).then(user => {
     if(user) {
@@ -362,7 +362,7 @@ exports.deleteaccount=(req,res)=>{
     return res.status(400).json(err)
   });
   }
-
+*/
   exports.storeimage=(req,res)=>upload(req,res,(err)=>{
     
     User.findOne({ username: req.decoded.name}).then(user => {
