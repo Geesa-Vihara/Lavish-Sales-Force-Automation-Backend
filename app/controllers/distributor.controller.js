@@ -14,7 +14,7 @@ exports.add = (req,res) => {
                 return res.status(400).json({userName:'Already exists'});
             }
             else{
-                const distributor = new distributor({
+                const distributor = new Distributor({
                     userName : req.body.userName,
                     fullName : req.body.fullName,
                     warehouse: req.body.warehouse,

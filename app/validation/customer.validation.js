@@ -9,7 +9,7 @@ module.exports = function validateDistributor(data){
     data.area = !isEmpty(data.area) ? data.area : "";
     data.type = !isEmpty(data.type) ? data.type : "";
     data.email = !isEmpty(data.email) ? data.email : "";
-    data.phoneNo = !isEmpty(data.phoneNo) ? data.phoneNoo : "";
+    data.phoneNo = !isEmpty(data.phoneNo) ? data.phoneNo : "";
     data.address = !isEmpty(data.address) ? data.address : "";
   
     if (Validator.isEmpty(data.shop)) {
