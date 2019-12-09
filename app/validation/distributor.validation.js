@@ -9,10 +9,10 @@ module.exports = function validateDistributor(data){
     data.area = !isEmpty(data.area) ? data.area : "";
     data.warehouse = !isEmpty(data.warehouse) ? data.warehouse : "";
     data.email = !isEmpty(data.email) ? data.email : "";
-    data.phoneNo = !isEmpty(data.phoneNo) ? data.phoneNoo : "";
+    data.phoneNo = !isEmpty(data.phoneNo) ? data.phoneNo : "";
     data.address = !isEmpty(data.address) ? data.address : "";
     data.password = !isEmpty(data.password) ? data.password : "";
-    data.confirmPassword = !isEmpty(data.confirmPassword) ? data.confirmPassword2 : "";
+    data.confirmPassword = !isEmpty(data.confirmPassword) ? data.confirmPassword : "";
 
     if (Validator.isEmpty(data.userName)) {
         errors.userName = "Username field is required";

@@ -14,7 +14,7 @@ exports.add = (req,res) => {
                 return res.status(400).json({shop:'Already exists'});
             }
             else{
-                const customer = new customer({
+                const customer = new Customer({
                     shop : req.body.shop,
                     name : req.body.name,
                     type: req.body.type,
@@ -23,11 +23,19 @@ exports.add = (req,res) => {
                     phoneNo: req.body.phoneNo,
                     email  : req.body.email,
                 });
-                bcrypt.genSalt(10,(err,salt) => {
+                customer
+                .save()                   
+                .then(customer => {
+                    res.status(200).json(customer);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+                /*bcrypt.genSalt(10,(err,salt) => {
                     bcrypt.hash(customer.password,salt,(err,hash) => {
                         if(err)
                             throw err;
-                        customer.password = hash;
+                        customer.password = hash; 
                         customer
                             .save()                   
                             .then(customer => {
@@ -37,7 +45,7 @@ exports.add = (req,res) => {
                                 console.log(err);
                             });
                    })
-                 })   
+                 }) */  
             }
         })
         .catch(err => {
