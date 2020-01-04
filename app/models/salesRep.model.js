@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+// const Base = require("./base.model");
 mongoose.set('useCreateIndex',true);
 mongoose.set('useFindAndModify',false);
 
@@ -40,13 +41,15 @@ const salesRepSchema = new Schema({
     password:{
         type : String,
         required : true
-    }
-},
-    {
-    timestamps : true
-    }
+    },
+    
+ },
+     {
+     timestamps:true
+        }
 );
  
 //compile model from schema
 const SalesRep = mongoose.model('salesReps',salesRepSchema);
+// const SalesRep = Base.discriminator('salesrep',salesRepSchema);
 module.exports = SalesRep;
