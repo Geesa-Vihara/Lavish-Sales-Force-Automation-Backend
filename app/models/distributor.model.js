@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+// const Base = require("./base.model");
 const Schema=mongoose.Schema;
 const distributorSchema = new Schema({
     
@@ -38,10 +38,15 @@ const distributorSchema = new Schema({
         type : String,
         required : true
     }
+    
 },
-    {
-    timestamps : true
-    }
+     {
+     timestamps : true
+     }
 );
+// const Distributor = Base.discriminator('distributor',distributorSchema);
 const Distributor = mongoose.model('distributors',distributorSchema);
-module.exports = Distributor;
+module.exports = Distributor
+
+// ERRORS - discriminator gives Can't customize discriminator option timestamps (can only modify toJSON, toObject, _id, id)
+//It hasn't resolve yet in new relase
