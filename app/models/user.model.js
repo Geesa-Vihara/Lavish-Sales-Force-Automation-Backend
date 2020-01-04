@@ -33,6 +33,10 @@ const UserSchema = mongoose.Schema({
       type: String,
       required: true
     },
+    lasttimenoticlicked:{
+      type:Date,
+      default:new Date()
+    },
     image: {
       type: String,
       default:"newuser.png"
