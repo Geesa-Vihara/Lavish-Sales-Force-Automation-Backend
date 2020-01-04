@@ -6,6 +6,9 @@ const path = require("path");
 const fs=require("fs");
 const nodemailer=require("nodemailer");
 require('dotenv').config();
+const mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+Invoice=mongoose.model('orders', new Schema(), 'orders');
 
 const User=require("../models/user.model.js");
 const validateLoginInput=require("../validation/login.validation.js");
@@ -415,4 +418,36 @@ exports.getimage=(req,res)=>{
   
 } 
 
- 
+exports.lastnoticlicked=(req,res)=>{    
+      User.findOne({ username: req.decoded.name }).then(user=>{
+        user.lasttimenoticlicked=req.body.lasttimenoticlicked;
+        user.save().then(
+          res.json('Lasttimenoticlicked updated!'))
+          .catch(err => {
+            res.status(400).send("Update not possible");
+            });
+      }) 
+    .catch(err=>{
+        console.error("error found!!!"+err);
+        return res.status(400).json(err)
+      });
+  }
+  
+  exports.newnotifications=(req,res)=>{  
+    User.findOne({ username: req.decoded.name }).then(user=>{
+      const lasttimenoticlicked=user.lasttimenoticlicked; 
+      Invoice
+      .find({ orderDate: { $gte: lasttimenoticlicked } })
+      .then(invoice =>{     
+          res.status(200).json(invoice);
+      })
+      .catch(err=>{
+          res.status(400).json(err);
+      });    
+    }) 
+  .catch(err=>{
+      console.error("error found!!!"+err);
+      return res.status(400).json(err)
+    });
+    
+}
