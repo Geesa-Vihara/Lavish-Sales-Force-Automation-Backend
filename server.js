@@ -46,11 +46,15 @@ const distributorRouter = require('./app/routes/distributor.routes');
 const customerRouter = require('./app/routes/customer.routes');
 const invoiceRouter = require('./app/routes/invoice.routes');
 const stockRouter = require('./app/routes/stock.routes');
+const dashboard = require('./app/routes/dashboard.routes');
+
 app.use('/salesreps',salesRepRouter);
 app.use('/distributors',distributorRouter);
 app.use('/customers',customerRouter);
 app.use('/invoices',invoiceRouter);
 app.use('/stock',stockRouter);
+app.use('/dashboard',dashboard);
+
 // listen for requests
 app.listen(8000, () => {
     console.log("Server is listening on port 8000");
