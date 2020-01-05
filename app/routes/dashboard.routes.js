@@ -4,5 +4,6 @@ const dashboard = require("../controllers/dashboard.controller");
 const verifyToken = require("../auth/verifyToken.js");
 
 router.get('/dailyorders',verifyToken,dashboard.dailyOrders);
+router.get('/topcustomer',verifyToken,dashboard.topCustomer);
 
 module.exports = router;
