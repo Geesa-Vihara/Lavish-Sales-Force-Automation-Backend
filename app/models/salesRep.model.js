@@ -42,6 +42,14 @@ const salesRepSchema = new Schema({
         type : String,
         required : true
     },
+     totalOrders:{
+        type:Number,
+        default:0
+     },
+     totalCustomers:{
+        type:Number,
+        default:0
+     }
     
  },
      {

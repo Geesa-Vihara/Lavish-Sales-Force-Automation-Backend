@@ -19,6 +19,10 @@ const customerSchema = new Schema({
         type : String,
         required : true,
     },
+     route:{
+         type:String,
+         requires:true
+     },
     address:{
         type : String,
         required : true,
