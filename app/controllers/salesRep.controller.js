@@ -149,7 +149,6 @@ exports.getbyId = (req,res) => {
             if(salesrep){
                     Customer.countDocuments({area : salesrep.area },function(err,count){       //get matching customer count
                         salesrep.totalCustomers = count;
-                        console.log(count);
                         if(err)
                             console.error(err);  
                     });
