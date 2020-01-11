@@ -65,6 +65,8 @@ exports.progress=(req,res)=>{
 exports.topProduct=(req,res)=>{
     var d = new Date(req.body.dateFrom);
     var n = new Date(req.body.dateTo);
+    d.setUTCHours(0,0,0,0);
+    n.setUTCHours(24,0,0,0); 
     Invoice.aggregate([
         
         { $match: { orderDate :{
@@ -85,5 +87,25 @@ exports.topProduct=(req,res)=>{
         }
         )
         .catch(err => {res.status(400).json(err);
+        })
+}
+exports.salesByArea=(req,res)=>{
+    var d = new Date(req.body.dateFrom);
+    var n = new Date(req.body.dateTo);
+    d.setUTCHours(0,0,0,0);
+    n.setUTCHours(24,0,0,0); 
+    Invoice.aggregate([
+        { $match: { orderDate :{
+            $gte: new Date(d),
+            $lt: new Date(n)
+        } } },
+        {$group : {_id : "$area",sum:{$sum:"$totalValue"}        
+
+    }}])
+        .then(rep=> res.status(200).json(rep)
+        )
+        .catch(err => {res.status(400).json(err);
+            
+
         })
 }
