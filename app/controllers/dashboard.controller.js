@@ -65,3 +65,26 @@ exports.topProduct=(req,res)=>{
         .catch(err => {res.status(400).json(err);
         })
 }
+
+exports.dailySales=(req,res)=>{
+    var d = new Date();
+    d.setUTCHours(0,0,0,0);
+    var n = new Date();
+    n.setUTCHours(24,0,0,0); 
+   /*  var d=new Date("2019-12-09T00:00:00.000Z");
+    var n=new Date("2019-12-10T00:00:00.000Z"); */ 
+    Invoice.aggregate([
+        { $match: { orderDate :{
+            $gte: new Date(d),
+            $lt: new Date(n)
+        } } },
+        {$group : {_id : "$area",sum:{$sum:"$totalValue"}        
+
+    }}])
+        .then(rep=> res.status(200).json(rep)
+        )
+        .catch(err => {res.status(400).json(err);
+            console.log(err)
+
+        })
+}
