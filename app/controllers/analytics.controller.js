@@ -1,5 +1,5 @@
 exports.yearlySales=(req,res)=>{
-    var d = new Date(req.body.year);
+    var d = new Date(req.body.year);       
     Invoice.aggregate([        
         {"$project": { 
             "year": {
@@ -65,8 +65,8 @@ exports.progress=(req,res)=>{
 exports.topProduct=(req,res)=>{
     var d = new Date(req.body.dateFrom);
     var n = new Date(req.body.dateTo);
-    d.setUTCHours(0,0,0,0);
-    n.setUTCHours(24,0,0,0); 
+    d.setUTCHours(24,0,0,0);
+    n.setUTCHours(48,0,0,0);  
     Invoice.aggregate([
         
         { $match: { orderDate :{
@@ -92,8 +92,28 @@ exports.topProduct=(req,res)=>{
 exports.salesByArea=(req,res)=>{
     var d = new Date(req.body.dateFrom);
     var n = new Date(req.body.dateTo);
-    d.setUTCHours(0,0,0,0);
-    n.setUTCHours(24,0,0,0); 
+    d.setUTCHours(24,0,0,0);
+    n.setUTCHours(48,0,0,0); 
+    Invoice.aggregate([
+        { $match: { orderDate :{
+            $gte: new Date(d),
+            $lt: new Date(n)
+        } } },
+        {$group : {_id : "$area",sum:{$sum:"$totalValue"}        
+
+    }}])
+        .then(rep=> res.status(200).json(rep)
+        )
+        .catch(err => {res.status(400).json(err);
+            
+
+        })
+}
+exports.routeCoverage=(req,res)=>{
+    var d = new Date(req.body.dateTime);
+    var n = new Date(req.body.dateTime);
+    d.setUTCHours(24,0,0,0);
+    n.setUTCHours(48,0,0,0); 
     Invoice.aggregate([
         { $match: { orderDate :{
             $gte: new Date(d),
