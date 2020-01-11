@@ -19,6 +19,10 @@ const customerSchema = new Schema({
         type : String,
         required : true,
     },
+     route:{
+         type:String,
+         required:true
+     },
     address:{
         type : String,
         required : true,
@@ -30,6 +34,11 @@ const customerSchema = new Schema({
     email:{
         type : String,
     },
+     status :{
+         type:String,           //active or inactive
+         default:"active"
+     },
+     
 },
     {
     timestamps : true
