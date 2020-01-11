@@ -19,6 +19,7 @@ exports.add = (req,res) => {
                     name : req.body.name,
                     type: req.body.type,
                     area : req.body.area,
+                    route : req.body.route,
                     address: req.body.address,
                     phoneNo: req.body.phoneNo,
                     email  : req.body.email,
@@ -65,50 +66,61 @@ exports.update = (req,res) => {
             shop : req.body.shop,
             name : req.body.name,
             type: req.body.type,
-            area     : req.body.area,
+            area : req.body.area,
+            route : req.body.route,
             address  : req.body.address,
             phoneNo  : req.body.phoneNo,
             email    : req.body.email,
         },{new:true})
         .then(customer => {
             if(customer){
-                res.status(200).send("successfuly updated");
+                return res.status(200).send("successfuly updated");
             }
             else{
-                res.status(400).send("cannot find customer with given id");
+                return res.status(400).send("cannot find customer with given id");
             }
         })
         .catch(err => {
-            res.status(400).json(err);
+            return res.status(400).json(err);
         });
 }
 
 exports.delete = (req,res) => {
     Customer
-        .findById(req.params.id)
+        .findById(req.params.id,{status:req.body.status})
         .then(customer => {
             if(customer){
-                customer.remove();
-                res.status(200).json({customer : ' Deleted successfuly !'});
+                //customer.remove();
+                //customer.status ="inactive";
+                customer
+                    .save()
+                    .then(res.status(200).json({customer : ' Removed successfuly !'}))
+                    .catch(err=>{return res.status(400).json({err:"cannot remove customer"})});
+                //return res.status(200).json({customer : ' Removed successfuly !'});
             }
             else{
-                res.status(400).send('cannot find customer with given id');
+                return res.status(404).send('cannot find customer with given id');
             }
         })
         .catch(err =>{
-            res.status(400).json(err);
+            return res.status(400).json(err);
         })
 
 }
 
 exports.getAll = (req,res) => {
     Customer
-        .find()
+        .find({status:"active"})
         .then(customers => {
-            res.status(200).json(customers);
+            /*
+            filteredCustomers = customers.map((customer) => {
+                if(customer.statue == "active")
+            })
+            */
+            return res.status(200).json(customers);
         })
         .catch(err => {
-            res.status(400).json(err);
+            return res.status(400).json(err);
         });
 }
 
@@ -117,13 +129,13 @@ exports.getbyId = (req,res) => {
         .findById(req.params.id)
         .then(customer => {
             if(customer){
-                res.status(200).json(customer);
+                return res.status(200).json(customer);
             }
             else{
-                res.status(400).send("cannot find customer with given id");
+                return res.status(404).send("cannot find customer with given id");
             }
         })
         .catch(err => {
-            res.status(400).json(err);
+            return res.status(400).json(err);
         });
 }

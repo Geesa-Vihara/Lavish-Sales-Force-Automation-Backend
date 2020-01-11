@@ -7,6 +7,7 @@ module.exports = function validateDistributor(data){
     data.shop = !isEmpty(data.shop)?data.shop:"";
     data.name = !isEmpty(data.name) ? data.name : "";
     data.area = !isEmpty(data.area) ? data.area : "";
+    data.route = !isEmpty(data.route) ? data.route:"";
     data.type = !isEmpty(data.type) ? data.type : "";
     data.email = !isEmpty(data.email) ? data.email : "";
     data.phoneNo = !isEmpty(data.phoneNo) ? data.phoneNo : "";
@@ -20,6 +21,9 @@ module.exports = function validateDistributor(data){
     }
     if (Validator.isEmpty(data.area)) {
          errors.area = "Area field is required";
+    }
+    if(Validator.isEmpty(data.route)){
+        errors.route = "Route is required";
     }
     if (Validator.isEmpty(data.type)) {
         errors.type = "type field is required";
