@@ -6,6 +6,7 @@ const verifyToken = require("../auth/verifyToken.js");
 router.get('/dailyorders',verifyToken,dashboard.dailyOrders);
 router.get('/topcustomer',verifyToken,dashboard.topCustomer);
 router.get('/topproduct',verifyToken,dashboard.topProduct);
+router.get('/dailysales',verifyToken,dashboard.dailySales);
 
 
 module.exports = router;
