@@ -17,4 +17,5 @@ router.get('/',verifyToken,salesRep.getAll);
 //getbyid
 router.get('/:id',verifyToken,salesRep.getbyId);   
 
+//router.get('/rate/:id',verifyToken,salesRep.rating);
 module.exports = router;

@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
-//const config = require('../../config/database.config');
 const SalesRep = require("../models/salesRep.model.js");
+const Customer = require("../models/customer.model");
+const Order = require("../models/invoice.model");
 const validateAddSalesrep=require("../validation/salesrepAdd.validation.js");
 const validateUpdateSalesrep=require("../validation/salesrepUpdate.validation.js");
 
@@ -18,7 +19,6 @@ exports.add = (req,res) => {
                 return res.status(400).json({SalesRepname:'Already exists' });
             }
             else{
-                console.log("hey");
                 const salesRep = new SalesRep({           //const salesRep = new salesRep(req.body)
                     userName : req.body.userName,
                     fullName : req.body.fullName,
@@ -74,14 +74,14 @@ exports.update = (req,res)=>{
     } ,{new :true})
         .then(salesRep => {
             if(salesRep){
-                res.status(200).send("successfuly updated");  
+                return res.status(200).send("successfuly updated");  
             }
             else{
-                res.status(400).send("cannot find salesRep with given id");
+                return res.status(400).send("cannot find salesRep with given id");
             }
         })
         .catch(err => {
-            res.status(400).json(err);
+            return res.status(400).json(err);
         });
   
 
@@ -95,14 +95,14 @@ exports.delete = (req,res) => {
         .then(salesRep => {
             if(salesRep){
                 salesRep.remove()                   
-                res.status(200).json({'salesRep' : 'salesRep deleted successfuly !'});   
+                return res.status(200).json({'salesRep' : 'salesRep deleted successfuly !'});   
             }
             else{
-                res.status(400).send("cannot find salesRep with given id");
+                return res.status(400).send("cannot find salesRep with given id");
             }
         })
         .catch(err => {
-            res.status(400).json(err);
+            return res.status(400).json(err);
         });
 
 
@@ -114,28 +114,65 @@ exports.getAll = (req,res)=>{
     SalesRep
         .find()
         .then(salesReps => {
-            res.status(200).json(salesReps);
+            return res.status(200).json(salesReps);
         })
         .catch(err => {
-            res.status(400).json(err);
+            return res.status(400).json(err);
         });
        
 }
 
 //get one salesRep data by id
-exports.getbyId = (req,res)=>{
+// exports.getbyId = (req,res)=>{
+
+//     SalesRep
+//         .findById(req.params.id)
+//         .then(salesrep => {
+//             if(salesrep){
+//                 //res.status(200).json(salesRep);
+//             }
+//             else{
+//                 return res.status(404).send("cannot find salesRep with given id");
+//             }
+//         })
+//         .catch(err => {
+//             return res.status(400).json(err);
+//         });
+// }
+
+//get one salesrep data for view
+exports.getbyId = (req,res) => {
 
     SalesRep
         .findById(req.params.id)
-        .then(salesRep => {
-            if(salesRep){
-                res.status(200).json(salesRep);
+        .then(salesrep => {
+            if(salesrep){
+                    Customer.countDocuments({area : salesrep.area },function(err,count){       //get matching customer count
+                        salesrep.totalCustomers = count;
+                        if(err)
+                            console.error(err);  
+                    });
+
+                     Order.countDocuments({salesrepName:salesrep.userName},function(err,count){      //get matching order count
+                        salesrep.totalOrders = count;
+                        if(err)
+                            console.error(err); 
+                    });
+
+                    salesrep
+                        .save()
+                        .then(res.status(200).json(salesrep))
+                        .catch(err => {res.status(400).json(err)});
             }
             else{
-                res.status(400).send("cannot find salesRep with given id");
+                return res.status(404).json({msg:"salesrep cannot find"});
             }
+            
         })
-        .catch(err => {
-            res.status(400).json(err);
+        .catch(err=>{
+            return res.status(400).json(err);
         });
+    
 }
+
+
