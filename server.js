@@ -47,6 +47,8 @@ const customerRouter = require('./app/routes/customer.routes');
 const invoiceRouter = require('./app/routes/invoice.routes');
 const stockRouter = require('./app/routes/stock.routes');
 const dashboard = require('./app/routes/dashboard.routes');
+const analytics = require('./app/routes/analytics.routes');
+
 
 app.use('/salesreps',salesRepRouter);
 app.use('/distributors',distributorRouter);
@@ -54,6 +56,8 @@ app.use('/customers',customerRouter);
 app.use('/invoices',invoiceRouter);
 app.use('/stock',stockRouter);
 app.use('/dashboard',dashboard);
+app.use('/analytics',analytics);
+
 
 // listen for requests
 app.listen(8000, () => {
