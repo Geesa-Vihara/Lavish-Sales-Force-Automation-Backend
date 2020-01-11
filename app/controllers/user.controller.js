@@ -436,6 +436,7 @@ exports.lastnoticlicked=(req,res)=>{
   exports.newnotifications=(req,res)=>{  
     User.findOne({ username: req.decoded.name }).then(user=>{
       const lasttimenoticlicked=user.lasttimenoticlicked; 
+      //const lasttimenoticlicked=new Date("2019-12-09T00:00:00.000Z"); 
       Invoice
       .find({ orderDate: { $gte: lasttimenoticlicked } })
       .then(invoice =>{     
