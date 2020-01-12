@@ -3,7 +3,7 @@ const router = express.Router();
 const stock = require("../controllers/stock.controller");
 const verifyToken = require("../auth/verifyToken.js");
 
-router.get('/',verifyToken,stock.getAll);
+router.post('/',verifyToken,stock.getStock);
 router.get('/:id',verifyToken,stock.getById);
 
 module.exports = router;
