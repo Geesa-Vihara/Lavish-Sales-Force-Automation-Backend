@@ -65,8 +65,8 @@ exports.progress=(req,res)=>{
 exports.topProduct=(req,res)=>{
     var d = new Date(req.body.dateFrom);
     var n = new Date(req.body.dateTo);
-    d.setUTCHours(24,0,0,0);
-    n.setUTCHours(48,0,0,0);  
+    d.setUTCHours(0,0,0,0);
+    n.setUTCHours(24,0,0,0); 
     Invoice.aggregate([
         
         { $match: { orderDate :{
@@ -92,8 +92,8 @@ exports.topProduct=(req,res)=>{
 exports.salesByArea=(req,res)=>{
     var d = new Date(req.body.dateFrom);
     var n = new Date(req.body.dateTo);
-    d.setUTCHours(24,0,0,0);
-    n.setUTCHours(48,0,0,0); 
+    d.setUTCHours(0,0,0,0);
+    n.setUTCHours(24,0,0,0); 
     Invoice.aggregate([
         { $match: { orderDate :{
             $gte: new Date(d),
@@ -112,8 +112,9 @@ exports.salesByArea=(req,res)=>{
 exports.routeCoverage=(req,res)=>{
     var d = new Date(req.body.dateTime);
     var n = new Date(req.body.dateTime);
-    d.setUTCHours(24,0,0,0);
-    n.setUTCHours(48,0,0,0); 
+    d.setUTCHours(0,0,0,0);
+    n.setUTCHours(24,0,0,0);     
+
     Invoice.aggregate([
         { $match: { orderDate :{
             $gte: new Date(d),
