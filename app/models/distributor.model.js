@@ -37,7 +37,16 @@ const distributorSchema = new Schema({
     password:{
         type : String,
         required : true
-    }
+    },
+     status :{
+         type:String,           //active or inactive
+         default:"active"
+     },
+     isLogin :{
+         type:Boolean,
+         default:true
+
+     } 
     
 },
      {

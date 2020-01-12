@@ -87,15 +87,16 @@ exports.update = (req,res) => {
 
 exports.delete = (req,res) => {
     Customer
-        .findById(req.params.id,{status:req.body.status})
+        .findByIdAndUpdate(req.params.id,{status:req.body.status},{new:true})
         .then(customer => {
             if(customer){
+                return res.status(200).json(customer);
                 //customer.remove();
                 //customer.status ="inactive";
-                customer
-                    .save()
-                    .then(res.status(200).json({customer : ' Removed successfuly !'}))
-                    .catch(err=>{return res.status(400).json({err:"cannot remove customer"})});
+                // customer
+                //     .save()
+                //     .then(res.status(200).json(customer))
+                //     .catch(err=>{return res.status(400).json({err:"cannot remove customer"})});
                 //return res.status(200).json({customer : ' Removed successfuly !'});
             }
             else{
@@ -117,7 +118,7 @@ exports.getAll = (req,res) => {
                 if(customer.statue == "active")
             })
             */
-            return res.status(200).json(customers);
+             return res.status(200).json(customers);
         })
         .catch(err => {
             return res.status(400).json(err);
@@ -129,7 +130,7 @@ exports.getbyId = (req,res) => {
         .findById(req.params.id)
         .then(customer => {
             if(customer){
-                return res.status(200).json(customer);
+                 return res.status(200).json(customer);
             }
             else{
                 return res.status(404).send("cannot find customer with given id");

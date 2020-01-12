@@ -44,6 +44,10 @@ const salesRepSchema = new Schema({
         type : String,
         required : true
     },
+    status :{
+        type:String,           //active or inactive
+        default:"active"
+    },
      totalOrders:{
         type:Number,
         default:0
@@ -51,7 +55,12 @@ const salesRepSchema = new Schema({
      totalCustomers:{
         type:Number,
         default:0
-     }
+     },
+     isLogin :{
+         type:Boolean,
+         default:true
+     },
+
     
  },
     // {
