@@ -5,7 +5,7 @@ const verifyToken = require("../auth/verifyToken.js");
 
 router.post('/add',verifyToken,distributor.add);
 router.put('/update/:id',verifyToken,distributor.update);
-router.delete('/delete/:id',verifyToken,distributor.delete);
+router.put('/delete/:id',verifyToken,distributor.delete);
 router.get('/',verifyToken,distributor.getAll);
 router.get('/:id',verifyToken,distributor.getbyId);
 

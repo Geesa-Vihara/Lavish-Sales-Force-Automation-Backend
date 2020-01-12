@@ -78,10 +78,10 @@ exports.update = (req,res) => {
 
 exports.delete = (req,res) => {
     Distributor
-        .findById(req.params.id)
+        .findByIdAndUpdate(req.params.id,{status:req.body.status},{new:true})
         .then(distributor => {
             if(distributor){
-                distributor.remove();
+                //distributor.remove();
                 res.status(200).json({distributor : ' Deleted successfuly !'});
             }
             else{
@@ -96,7 +96,7 @@ exports.delete = (req,res) => {
 
 exports.getAll = (req,res) => {
     Distributor
-        .find()
+        .find({status:"active"})
         .then(distributors => {
             res.status(200).json(distributors);
         })
