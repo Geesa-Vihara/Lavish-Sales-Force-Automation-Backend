@@ -11,7 +11,7 @@ router.post('/add',verifyToken,salesRep.add);
 //update
 router.put('/update/:id',verifyToken,salesRep.update);    // request body validating
 //delete
-router.delete('/delete/:id',verifyToken,salesRep.delete);
+router.put('/delete/:id',verifyToken,salesRep.delete);
 //getall
 router.get('/',verifyToken,salesRep.getAll);
 //getbyid

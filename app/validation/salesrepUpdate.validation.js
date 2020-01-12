@@ -9,7 +9,7 @@ module.exports = function validateUpdateSalesrep(data){
     data.area = !isEmpty(data.area) ? data.area : "";
     data.nic = !isEmpty(data.nic) ? data.nic : "";
     data.email = !isEmpty(data.email) ? data.email : "";
-    data.phoneNo = !isEmpty(data.phoneNo) ? data.phoneNoo : "";
+    data.phoneNo = !isEmpty(data.phoneNo) ? data.phoneNo : "";
     data.address = !isEmpty(data.address) ? data.address : "";
 
     if (Validator.isEmpty(data.userName)) {
