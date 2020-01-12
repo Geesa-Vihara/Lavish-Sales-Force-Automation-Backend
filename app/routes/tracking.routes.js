@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const stock = require("../controllers/stock.controller");
+const tracking = require("../controllers/tracking.controller");
 const verifyToken = require("../auth/verifyToken.js");
 
-router.post('/',verifyToken,stock.getStock);
-router.get('/:id',verifyToken,stock.getById);
+router.post('/getmarkers',verifyToken,tracking.getMarkers);
+
 
 module.exports = router;
