@@ -166,7 +166,7 @@ exports.getbyId = (req,res) => {
 
                     salesrep
                         .save()
-                        .then(res.status(200).json(salesrep))
+                        .then(salesrep => { return res.status(200).json(salesrep)})
                         .catch(err => {res.status(400).json(err)});
             }
             else{
