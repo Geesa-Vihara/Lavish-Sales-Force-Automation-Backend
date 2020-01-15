@@ -9,14 +9,14 @@ exports.add = (req,res) => {
 
     const { errors,isValid } = validateAddSalesrep(req.body);
     if(!isValid){
-        console.log(errors);
+        //console.log(errors);
         return res.status(400).json(errors);
     }
     SalesRep
         .findOne({userName : req.body.userName})
         .then(salesrep => {
             if(salesrep){
-                return res.status(400).json({SalesRepname:'Already exists' });
+                return res.status(404).json({SalesRepname:'Already exists' });
             }
             else{
                 const salesRep = new SalesRep({           //const salesRep = new salesRep(req.body)
