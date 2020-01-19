@@ -1,3 +1,6 @@
+const Order = require("../models/invoice.model");
+const SalesRep = require("../models/salesRep.model.js");
+
 exports.yearlySales=(req,res)=>{
     var d = new Date(req.body.year);       
     Invoice.aggregate([        
@@ -129,4 +132,85 @@ exports.routeCoverage=(req,res)=>{
             
 
         })
+}
+
+exports.topOutlet = (req,res) =>{
+    var s = new Date(req.body.dateTime);  //start
+    var e = new Date(req.body.dateTime);  //end
+    s.setUTCHours(0,0,0,0);
+    e.setUTCHours(24,0,0,0);
+
+    Order
+        .aggregate(
+            [
+                {
+                    $match : { orderDate :{$gte: new Date(s), $lt: new Date(e)}}
+                },
+                {
+                    $group : {
+                        _id : '$customerName',
+                        count:{$sum:1}
+                    }
+                },
+                {
+                    $sort:{count:-1}
+                },
+                {
+                    $limit : 10
+               }
+            ]
+        )
+        .then(data=>{
+            return res.status(200).json(data);
+        })
+        .catch(err =>{
+            return res.status(400).json(err);
+        })
+}
+
+exports.topBestSalesrep = (req,res)=> {
+    SalesRep
+        .aggregate(
+            [
+                {
+                    $match:{status:"active"}
+                },
+                {
+                    $sort:{totalOrders:-1}
+                },
+                {
+                     $limit : 10
+                }
+            ]
+        )
+        .then(data=>{
+            return res.status(200).json(data);
+        })
+        .catch(err =>{
+            return res.status(400).json(err);
+        })
+
+}
+exports.topLeastSalesrep = (req,res)=> {
+    SalesRep
+        .aggregate(
+            [
+                {
+                    $match:{status:"active"}
+                },
+                {
+                    $sort:{totalOrders:1}
+                },
+                {
+                     $limit : 10
+                }
+            ]
+        )
+        .then(data=>{
+            return res.status(200).json(data);
+        })
+        .catch(err =>{
+            return res.status(400).json(err);
+        })
+
 }
