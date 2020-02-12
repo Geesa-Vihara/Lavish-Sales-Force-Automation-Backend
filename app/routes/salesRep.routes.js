@@ -15,7 +15,8 @@ router.put('/delete/:id',verifyToken,salesRep.delete);
 //getall
 router.get('/',verifyToken,salesRep.getAll);
 //getbyid
-router.get('/:id',verifyToken,salesRep.getbyId);   
+router.get('/:id',verifyToken,salesRep.getbyId);  
+router.get('/monthlySales/:id',verifyToken,salesRep.monthlySales) ;
 
 //router.get('/rate/:id',verifyToken,salesRep.rating);
 module.exports = router;

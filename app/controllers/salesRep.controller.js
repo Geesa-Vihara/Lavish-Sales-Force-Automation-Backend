@@ -180,4 +180,57 @@ exports.getbyId = (req,res) => {
     
 }
 
+exports.monthlySales = (req,res) => {
+    var date = new Date();
+    SalesRep
+        .findById(req.params.id)
+        .then(salesrep => {
+            if(salesrep){
+                Order
+                    .aggregate(
+                        [   
+                            {
+                                $match :{
+                                    salesrepName:"$salesrep.fullName",
+                            // salesYear:date.getFullYear()
+                                }
+                            },
+                            {
+                                $project : { 
+                                    salesMonth :{$month :"$orderDate"},
+                                    salesYear:{$year:"$orderDate"}
+                                }
+                            },
+                            {
+                                $group : {
+                                    _id:{salesMonth :"$salesMonth" },
+                                    count :{$sum:1}
+                                }
+                            }
+                            // {$sort : {salesMonth:1}}
+                        ]
+                    )        
+                        // .exec((error,docs) =>{
+                        //     if(error)
+                        //         console.log(error);
+                        //     console.log(docs);
+                        //     res.status(200).json(docs);
+                        
+                    .then(data=> {
+                        //console.log(data);
+                        return res.status(200).json(data);
+                    })
+                    .catch(err => {
+                        return res.status(400).json(err);
+                    });
+            }
+            else{
+                return res.status(404).json({msg:"salesrep cannot find"});
+            }
+        })
+        .catch(err=>{
+            return res.status(400).json(err);
+        });
 
+
+}
