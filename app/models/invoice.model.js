@@ -14,6 +14,10 @@ const invoiceSchema = new Schema({
     type: String,
     required: true
   },
+  area:{
+    type:String,
+    required:true
+  },
 
   teapouch20: {
     name: { type: String, default: "tea pouch" },

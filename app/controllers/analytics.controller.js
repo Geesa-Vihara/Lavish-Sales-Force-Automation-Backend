@@ -148,16 +148,20 @@ exports.topOutlet = (req,res) =>{
                 },
                 {
                     $group : {
-                        _id : '$customerName',
-                        count:{$sum:1}
+                        _id : '$customerName', 
+                       // area:"$area",                 
+                        totalSum:{$sum:'$totalValue'}           // total revenue from outlet
                     }
                 },
                 {
-                    $sort:{count:-1}
+                    $sort:{totalSum:-1}
                 },
                 {
                     $limit : 10
-               }
+                },
+                {
+                    $project:{ _id:1, area:"$area" }
+                }
             ]
         )
         .then(data=>{
@@ -169,17 +173,43 @@ exports.topOutlet = (req,res) =>{
 }
 
 exports.topBestSalesrep = (req,res)=> {
-    SalesRep
+    Order
         .aggregate(
             [
+                // {
+                //     $lookup:{
+                //         from: "SalesRep",
+                //         let:{name:"$salesrepName"}, //or id
+                //         pipeline:[
+                //             {$match:
+                //                 {$expr:
+                //                     {$and:
+                //                         [
+                //                             {$eq:["$fullName","$$name"],["$status","active"]}
+                //                         ]
+                //                     }
+                //                 }
+                //             }
+                //         ],
+                //         as: "status"
+                //     }
+                // },
                 {
-                    $match:{status:"active"}
+                    $group : {
+                        _id : '$salesrepName',
+                        //name:"$salesrepName"
+                       // area:"$area",                  
+                        totalSum:{$sum:'$totalValue'}           
+                    }
                 },
                 {
-                    $sort:{totalOrders:-1}
+                    $sort:{totalSum:-1}
                 },
                 {
                      $limit : 10
+                },
+                {
+                    $project:{ _id:1, area:"$area" }
                 }
             ]
         )
@@ -192,14 +222,26 @@ exports.topBestSalesrep = (req,res)=> {
 
 }
 exports.topLeastSalesrep = (req,res)=> {
-    SalesRep
+    Order
         .aggregate(
             [
+                // {
+                //     $match:{status:"active"}
+                // },
+                // {
+                //     $sort:{totalOrders:1}
+                // },
                 {
-                    $match:{status:"active"}
+                    $group : {
+                        _id : '$salesrepName',                  
+                        totalSum:{$sum:'$totalValue'}           
+                    }
                 },
                 {
-                    $sort:{totalOrders:1}
+                    $sort:{totalSum:1}
+                },
+                {
+                    $project:{ _id:1, area:"$area" }
                 },
                 {
                      $limit : 10
