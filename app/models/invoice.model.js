@@ -4,7 +4,7 @@ const Schema=mongoose.Schema;
 const invoiceSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
   Invoiceno: {
-    type: String,
+    type: Number,
     required: true
   },
   salesrepName: {

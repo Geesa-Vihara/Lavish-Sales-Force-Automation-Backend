@@ -3,6 +3,11 @@ const Invoice = require("../models/invoice.model");
 
 exports.getAll=(req,res)=>{
 
+    // var df=new Date(req.body.dateFrom);  
+    // var dt=new Date(req.body.dateTo);  
+    // df.setUTCHours(0,0,0,0);
+    // dt.setUTCHours(24,0,0,0); 
+
     Invoice
         .find()
         .then(invoices => {
