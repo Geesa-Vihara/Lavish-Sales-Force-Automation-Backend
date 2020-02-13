@@ -4,7 +4,7 @@ const Schema=mongoose.Schema;
 const invoiceSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
   Invoiceno: {
-    type: String,
+    type: Number,
     required: true
   },
   salesrepName: {
@@ -13,6 +13,10 @@ const invoiceSchema = new Schema({
   customerName: {
     type: String,
     required: true
+  },
+  area:{
+    type:String,
+    required:true
   },
 
   teapouch20: {
