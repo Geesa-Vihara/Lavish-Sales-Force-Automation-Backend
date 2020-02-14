@@ -176,8 +176,8 @@ exports.rating = (req,res) => {
 
                     ])
                     .then(data=> {
-                        console.log("rating data");
-                        console.log(data);
+                       // console.log("rating data");
+                      //  console.log(data);
                         return res.status(200).json(data);
                     })
                     .catch(err => {
@@ -233,8 +233,8 @@ exports.monthlySales = (req,res) => {
                         //     res.status(200).json(docs);
                         
                     .then(data=> {
-                        console.log("monthly data");
-                        console.log(data);
+                        //console.log("monthly data");
+                        //console.log(data);
                         return res.status(200).json(data);
                     })
                     .catch(err => {
