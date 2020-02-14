@@ -48,6 +48,7 @@ const invoiceRouter = require('./app/routes/invoice.routes');
 const stockRouter = require('./app/routes/stock.routes');
 const dashboard = require('./app/routes/dashboard.routes');
 const analytics = require('./app/routes/analytics.routes');
+const reports = require('./app/routes/reports.routes');
 const tracking = require('./app/routes/tracking.routes');
 
 
@@ -58,6 +59,7 @@ app.use('/invoices',invoiceRouter);
 app.use('/stock',stockRouter);
 app.use('/dashboard',dashboard);
 app.use('/analytics',analytics);
+app.use('/reports',reports);
 app.use('/tracking',tracking);
 
 
