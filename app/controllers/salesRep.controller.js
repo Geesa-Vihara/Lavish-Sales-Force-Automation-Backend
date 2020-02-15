@@ -128,57 +128,73 @@ exports.getAll = (req,res)=>{
 }
 
 //get one salesRep data by id
-// exports.getbyId = (req,res)=>{
-
-//     SalesRep
-//         .findById(req.params.id)
-//         .then(salesrep => {
-//             if(salesrep){
-//                 //res.status(200).json(salesRep);
-//             }
-//             else{
-//                 return res.status(404).send("cannot find salesRep with given id");
-//             }
-//         })
-//         .catch(err => {
-//             return res.status(400).json(err);
-//         });
-// }
-
-//get one salesrep data for view
-exports.getbyId = (req,res) => {
+exports.getbyId = (req,res)=>{
 
     SalesRep
         .findById(req.params.id)
         .then(salesrep => {
             if(salesrep){
-                    Customer.countDocuments({area : salesrep.area },function(err,count){       //get matching customer count
-                        salesrep.totalCustomers = count;
-                        if(err)
-                            console.error(err);  
-                    });
+                return res.status(200).json(salesrep);
+            }
+            else{
+                return res.status(404).send("cannot find salesRep with given id");
+            }
+        })
+        .catch(err => {
+            return res.status(400).json(err);
+        });
+}
 
-                     Order.countDocuments({salesrepName:salesrep.userName},function(err,count){      //get matching order count
-                        salesrep.totalOrders = count;
-                        if(err)
-                            console.error(err); 
-                    });
 
-                    salesrep
-                        .save()
-                        .then(salesrep => { return res.status(200).json(salesrep)})
-                        .catch(err => {res.status(400).json(err)});
+exports.rating = (req,res) => {
+    var date = new Date();
+     SalesRep
+         .findById(req.params.id)
+         .then(salesrep =>{
+             if(salesrep){
+                Order
+                    .aggregate([
+                       // { $project : { monthRate : { $month : "$date" } } } ,
+                       {
+                            $match :{
+                                salesrepName:salesrep.fullName,
+                                // salesYear:date.getFullYear()
+                            }
+                        },
+                        {
+                            $group:{
+                             //   _id: {monthRate:"$monthRate"}, totalSum:{$sum:"$totalValue"},
+                                _id : "$salesrepName",
+                                totalSum:{$sum:"$totalValue"},
+                                totalOrders:{$sum:1}
+                                
+                            }
+                        },
+                        {
+                            $project:{ _id:1, area:"$area" ,totalSum:1,totalOrders:1}
+                        }
+
+                    ])
+                    .then(data=> {
+                       // console.log("rating data");
+                      //  console.log(data);
+                        return res.status(200).json(data);
+                    })
+                    .catch(err => {
+                            console.log(err);
+                            return res.status(400).json(err);
+                          
+                    })
             }
             else{
                 return res.status(404).json({msg:"salesrep cannot find"});
             }
-            
         })
         .catch(err=>{
             return res.status(400).json(err);
         });
-    
 }
+    
 
 exports.monthlySales = (req,res) => {
     var date = new Date();
@@ -191,23 +207,23 @@ exports.monthlySales = (req,res) => {
                         [   
                             {
                                 $match :{
-                                    salesrepName:"$salesrep.fullName",
-                            // salesYear:date.getFullYear()
+                                    salesrepName:salesrep.fullName,
                                 }
                             },
                             {
-                                $project : { 
-                                    salesMonth :{$month :"$orderDate"},
-                                    salesYear:{$year:"$orderDate"}
+                                "$project" : { 
+                                    "salesMonth" :{"$month" :"$orderDate"},
+                                    "salesYear":{"$year":"$orderDate"},
+                                    //totalSum:1
                                 }
                             },
                             {
                                 $group : {
-                                    _id:{salesMonth :"$salesMonth" },
-                                    count :{$sum:1}
+                                    _id:"$salesMonth",
+                                    totalSum:{$sum:"$totalValue"}
                                 }
-                            }
-                            // {$sort : {salesMonth:1}}
+                            },
+                            {$sort : {salesMonth:1}}
                         ]
                     )        
                         // .exec((error,docs) =>{
@@ -217,6 +233,7 @@ exports.monthlySales = (req,res) => {
                         //     res.status(200).json(docs);
                         
                     .then(data=> {
+                        //console.log("monthly data");
                         //console.log(data);
                         return res.status(200).json(data);
                     })

@@ -44,7 +44,7 @@ const distributorSchema = new Schema({
      },
      isLogin :{
          type:Boolean,
-         default:true
+         default:false
 
      } 
     
