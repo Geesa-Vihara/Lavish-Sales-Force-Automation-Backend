@@ -13,8 +13,8 @@ exports.getMarkers=(req,res)=>{
         }, 
     },
             {"$project": 
-            {orderId:"$Invoiceno",salesrep:"$salesrepName",customer:"$customerName",date: { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } }, hour: { $hour: "$orderDate" },
-            minutes: { $minute: "$orderDate" },lat:"$lat",lng:"$lng"}
+            {orderId:"$Invoiceno",salesrep:"$salesrepName",customer:"$customerName",date: { $dateToString: { format: "%Y-%m-%d", date: '$orderDate', timezone: 'Asia/Colombo'}  } , hour: { $hour: {date: '$orderDate', timezone: 'Asia/Colombo'}},
+            minutes: { $minute: {date: '$orderDate', timezone: 'Asia/Colombo'} },lat:"$Latitude",lng:"$Longitude"}
         }]).then(rep=> {
                 res.status(200).json(rep)
           })
@@ -36,8 +36,8 @@ exports.getMarkers=(req,res)=>{
         }, 
     },
             {"$project": 
-            {orderId:"$Invoiceno",salesrep:"$salesrepName",customer:"$customerName",date: { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } }, hour: { $hour: "$orderDate" },
-            minutes: { $minute: "$orderDate" },lat:"$lat",lng:"$lng"}
+            {orderId:"$Invoiceno",salesrep:"$salesrepName",customer:"$customerName",date: { $dateToString: { format: "%Y-%m-%d", date: '$orderDate', timezone: 'Asia/Colombo'}  }, hour: { $hour: {date: '$orderDate', timezone: 'Asia/Colombo'}},
+            minutes: { $minute: {date: '$orderDate', timezone: 'Asia/Colombo'} },lat:"$Latitude",lng:"$Longitude"}
         }]).then(rep=> {
                 res.status(200).json(rep)
           })
