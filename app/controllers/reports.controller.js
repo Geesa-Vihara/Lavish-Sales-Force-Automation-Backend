@@ -33,9 +33,9 @@ exports.generateRep=(req,res)=>{
             $lt: new Date(n)
         } } },{"$group" : {
             _id: { distname:"$distname"},
-            currdate:{$first:{ $dateToString: { format: "%Y-%m-%d", date: "$dateandtime" } }},
-            hour: {$first:{ $hour: "$dateandtime" }},
-            minutes: {$first:{ $minute: "$dateandtime" }},
+            currdate:{$first:{ $dateToString: { format: "%Y-%m-%d", date: '$dateandtime', timezone: 'Asia/Colombo'} }},
+            hour: {$first:{ $hour: {date: '$dateandtime', timezone: 'Asia/Colombo'} }},
+            minutes: {$first:{ $minute: {date: '$dateandtime', timezone: 'Asia/Colombo'} }},
             repname:{$first:"$repname"},
             stockno:{$first:"$stockno"},
 
@@ -87,9 +87,9 @@ exports.generateRep=(req,res)=>{
             $lt: new Date(n)
         } } },{"$group" : {
             _id: { distname:req.body.distributor},
-            currdate:{$first:{ $dateToString: { format: "%Y-%m-%d", date: "$dateandtime" } }},
-            hour: {$first:{ $hour: "$dateandtime" }},
-            minutes: {$first:{ $minute: "$dateandtime" }},
+            currdate:{$first:{ $dateToString: { format: "%Y-%m-%d", date: '$dateandtime', timezone: 'Asia/Colombo'} }},
+            hour: {$first:{ $hour: {date: '$dateandtime', timezone: 'Asia/Colombo'} }},
+            minutes: {$first:{ $minute: {date: '$dateandtime', timezone: 'Asia/Colombo'} }},
             repname:{$first:"$repname"},
             stockno:{$first:"$stockno"},
 
@@ -121,11 +121,12 @@ exports.byDist=(req,res)=>{
       } },{$group : {
         _id :"$_id",
         totalValue:{$first:"$totalValue"},
-        currdate:{$first:{ $dateToString: { format: "%Y-%m-%d", date: new Date() } }},
+
+        currdate:{$first:{ $dateToString: { format: "%Y-%m-%d", date: new Date(), timezone: 'Asia/Colombo' } }},
         Invoiceno :{$first:"$Invoiceno"},
         salesrepName:{$first:"$salesrepName"},
-        distUsername:{$first:"$distUsername"},
-        orderDate: {$first:{ $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } }},
+        distUsername:{$first:"$distUsername"},       
+        orderDate:  {$first:{ $dateToString: { format: "%Y-%m-%d", date: '$orderDate', timezone: 'Asia/Colombo'} }},
         area:{$first:"$area"},
         route:{$first:"$route"}, 
         collection:{$first:"$collection"},
@@ -163,7 +164,7 @@ exports.byDist=(req,res)=>{
                 $limit : 1
            },{ $addFields: 
             { 
-                currdate:{ $dateToString: { format: "%Y-%m-%d", date: new Date() } },
+                currdate:{ $dateToString: { format: "%Y-%m-%d", date: new Date(), timezone: 'Asia/Colombo' } },
 
             }
         }])

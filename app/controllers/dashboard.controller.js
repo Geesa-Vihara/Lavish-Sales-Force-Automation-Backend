@@ -78,7 +78,7 @@ exports.dailySales=(req,res)=>{
             $gte: new Date(d),
             $lt: new Date(n)
         } } },
-        {$group : {_id : "$area",sum:{$sum:"$totalValue"}        
+        {$group : {_id : "$CustomerAddress",sum:{$sum:"$totalValue"}        
 
     }}])
         .then(rep=> res.status(200).json(rep)
