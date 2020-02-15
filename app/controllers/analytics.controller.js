@@ -102,7 +102,7 @@ exports.salesByArea=(req,res)=>{
             $gte: new Date(d),
             $lt: new Date(n)
         } } },
-        {$group : {_id : "$area",sum:{$sum:"$totalValue"}        
+        {$group : {_id : "$CustomerAddress",sum:{$sum:"$totalValue"}        
 
     }}])
         .then(rep=> res.status(200).json(rep)
@@ -123,9 +123,11 @@ exports.routeCoverage=(req,res)=>{
             $gte: new Date(d),
             $lt: new Date(n)
         } } },
-        {$group : {_id : "$area",sum:{$sum:"$totalValue"}        
+        {$group : {_id : "$CustomerAddress",sum:{$sum:"$totalValue"}        
 
-    }}])
+    }},{
+        $sort:{sum:-1}
+    }])
         .then(rep=> res.status(200).json(rep)
         )
         .catch(err => {res.status(400).json(err);
