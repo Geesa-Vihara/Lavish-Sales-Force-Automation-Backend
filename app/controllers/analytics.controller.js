@@ -6,10 +6,10 @@ exports.yearlySales=(req,res)=>{
     Invoice.aggregate([        
         {"$project": { 
             "year": {
-             "$year": "$orderDate"
+             "$year":  {date: '$orderDate', timezone: 'Asia/Colombo'}
           },
           "month": {
-            "$month": "$orderDate"
+            "$month":  {date: '$orderDate', timezone: 'Asia/Colombo'}
           },
           "tot":"$totalValue"
         
@@ -38,7 +38,7 @@ exports.progress=(req,res)=>{
     Invoice.aggregate([        
         {"$project": { 
             "year": {
-             "$year": "$orderDate"
+             "$year":  {date: '$orderDate', timezone: 'Asia/Colombo'}
           },
           "tot":"$totalValue"
         
