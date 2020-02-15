@@ -54,11 +54,11 @@ const salesRepSchema = new Schema({
      },
      totalCustomers:{
         type:Number,
-        default:0
+        //default:0
      },
      isLogin :{
          type:Boolean,
-         default:true
+         default:false
      },
 
     
