@@ -69,7 +69,8 @@ exports.update = (req,res)=>{
             area     : req.body.area,
             address  : req.body.address,
             phoneNo  : req.body.phoneNo,
-            email    : req.body.email
+            email    : req.body.email,
+            distributor:req.body.distributor
                
     } ,{new :true})
         .then(salesRep => {
@@ -81,6 +82,7 @@ exports.update = (req,res)=>{
             }
         })
         .catch(err => {
+            console.log(err);
             return res.status(400).json(err);
         });
   

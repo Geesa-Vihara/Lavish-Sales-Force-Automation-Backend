@@ -22,6 +22,10 @@ const distributorSchema = new Schema({
         type : String,
         required : true,
     },
+    salesrep:{
+        type:String,
+        default:''
+    },
     address:{
         type : String,
         required : true,
