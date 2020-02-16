@@ -2,6 +2,19 @@ const express=require('express');
 const mongoose = require('mongoose');
 const bodyParser=require('body-parser');
 
+// to deploy in heroku
+const path = require('path');           
+const PORT = process.env.PORT || 8000;
+if (process.env.NODE_ENV === 'production') {           
+
+
+    app.use(express.static('client/build'));
+  
+    app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    });
+  }
+
 const app=express();//create an express app
 
 app.use(bodyParser.urlencoded({extended:true}))//for parsing application/x-www-form-urlencoded
@@ -65,6 +78,6 @@ app.use('/tracking',tracking);
 
 
 // listen for requests
-app.listen(8000, () => {
-    console.log("Server is listening on port 8000");
+app.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
 });
