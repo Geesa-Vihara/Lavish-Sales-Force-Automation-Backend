@@ -137,12 +137,12 @@ exports.routeCoverage=(req,res)=>{
 }
 
 exports.topOutlet = (req,res) =>{
-    var s = new Date(req.body.dateTime);  //start
-    var e = new Date(req.body.dateTime);  //end
+    var s = new Date(req.body.dateFrom);  //start
+    var e = new Date(req.body.dateTo);  //end
     s.setUTCHours(0,0,0,0);
     e.setUTCHours(24,0,0,0);
 
-    Order
+    Invoice
         .aggregate(
             [
                 {
@@ -150,8 +150,8 @@ exports.topOutlet = (req,res) =>{
                 },
                 {
                     $group : {
-                        _id : '$customerName', 
-                       // area:"$area",                 
+                        _id : '$CustomerAddress', 
+                      //  area:"$CustomerAddress",                 
                         totalSum:{$sum:'$totalValue'}           // total revenue from outlet
                     }
                 },
@@ -162,20 +162,23 @@ exports.topOutlet = (req,res) =>{
                     $limit : 10
                 },
                 {
-                    $project:{ _id:1, area:"$area" }
+                    $project:{ _id:1, area:"$CustomerAddress" }
                 }
             ]
         )
         .then(data=>{
+            console.log("topOutlets")
+            console.log(data)
             return res.status(200).json(data);
         })
         .catch(err =>{
+            console.log(err)
             return res.status(400).json(err);
         })
 }
 
 exports.topBestSalesrep = (req,res)=> {
-    Order
+    Invoice
         .aggregate(
             [
                 // {
@@ -211,7 +214,7 @@ exports.topBestSalesrep = (req,res)=> {
                      $limit : 10
                 },
                 {
-                    $project:{ _id:1, area:"$area" }
+                    $project:{ _id:1, area:"$CustomerAddress" }
                 }
             ]
         )
@@ -224,7 +227,7 @@ exports.topBestSalesrep = (req,res)=> {
 
 }
 exports.topLeastSalesrep = (req,res)=> {
-    Order
+    Invoice
         .aggregate(
             [
                 // {
@@ -243,7 +246,7 @@ exports.topLeastSalesrep = (req,res)=> {
                     $sort:{totalSum:1}
                 },
                 {
-                    $project:{ _id:1, area:"$area" }
+                    $project:{ _id:1, area:"$CustomerAddress" }
                 },
                 {
                      $limit : 10
