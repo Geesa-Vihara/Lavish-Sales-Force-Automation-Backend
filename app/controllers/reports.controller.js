@@ -1,3 +1,6 @@
+const mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+Stockbal=mongoose.model('stockbalnaces', new Schema(), 'stockbalnaces');
 exports.generateRep=(req,res)=>{
     
    if(req.body.type==="sales" && req.body.distributor==="All"){
@@ -26,20 +29,20 @@ exports.generateRep=(req,res)=>{
     var n = new Date(req.body.date);
     d.setUTCHours(0,0,0,0);
     n.setUTCHours(24,0,0,0);
-    Stock.aggregate([        
+    Stockbal.aggregate([        
         
         { $match: { dateandtime :{
             $gte: new Date(d),
             $lt: new Date(n)
-        } } },{"$group" : {
+        } } } ,{"$group" : {
             _id: { distname:"$distname"},
             currdate:{$first:{ $dateToString: { format: "%Y-%m-%d", date: '$dateandtime', timezone: 'Asia/Colombo'} }},
             hour: {$first:{ $hour: {date: '$dateandtime', timezone: 'Asia/Colombo'} }},
             minutes: {$first:{ $minute: {date: '$dateandtime', timezone: 'Asia/Colombo'} }},
             repname:{$first:"$repname"},
-            stockno:{$first:"$stockno"},
+            stockno:{$first:"$stockblanceno"},
 
-            }}
+            }} 
       ])
         .then(rep=> 
             res.status(200).json(rep)
@@ -80,7 +83,7 @@ exports.generateRep=(req,res)=>{
     var n = new Date(req.body.date);
     d.setUTCHours(0,0,0,0);
     n.setUTCHours(24,0,0,0);
-    Stock.aggregate([        
+    Stockbal.aggregate([        
         
         { $match: { dateandtime :{
             $gte: new Date(d),
@@ -153,7 +156,7 @@ exports.byDist=(req,res)=>{
             var n = new Date(req.body.date);
             d.setUTCHours(0,0,0,0);
             n.setUTCHours(24,0,0,0);
-            Stock.aggregate([
+            Stockbal.aggregate([
                 { $match: { dateandtime :{
                     $gte: new Date(d),
                     $lt: new Date(n)
