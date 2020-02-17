@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const Distributor = require("../models/distributor.model");
 const validateDistributor = require("../validation/distributor.validation");
+const validateUpdateDistributor = require("../validation/distributorUpdate.validation");
 
 exports.add = (req,res) => {
     const { errors,isValid } = validateDistributor(req.body);
@@ -49,7 +50,7 @@ exports.add = (req,res) => {
 
 
 exports.update = (req,res) => {
-    const { errors,isValid } = validateDistributor(req.body);
+    const { errors,isValid } = validateUpdateDistributor(req.body);
     if(!isValid){
         return res.status(400).json(errors);
     }
@@ -62,6 +63,7 @@ exports.update = (req,res) => {
             address  : req.body.address,
             phoneNo  : req.body.phoneNo,
             email    : req.body.email,
+            salesrep : req.body.salesrep
         },{new:true})
         .then(distributor => {
             if(distributor){
