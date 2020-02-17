@@ -14,7 +14,7 @@ const invoiceSchema = new Schema({
     type: String,
     required: true
   },
-  area:{
+  CustomerAddress:{
     type:String,
     required:true
   },
