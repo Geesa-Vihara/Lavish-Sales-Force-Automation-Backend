@@ -69,7 +69,8 @@ exports.update = (req,res)=>{
             area     : req.body.area,
             address  : req.body.address,
             phoneNo  : req.body.phoneNo,
-            email    : req.body.email
+            email    : req.body.email,
+            distributor:req.body.distributor
                
     } ,{new :true})
         .then(salesRep => {
@@ -81,6 +82,7 @@ exports.update = (req,res)=>{
             }
         })
         .catch(err => {
+            console.log(err);
             return res.status(400).json(err);
         });
   
@@ -157,7 +159,7 @@ exports.rating = (req,res) => {
                        // { $project : { monthRate : { $month : "$date" } } } ,
                        {
                             $match :{
-                                salesrepName:salesrep.fullName,
+                                salesrepName:salesrep.userName,
                                 // salesYear:date.getFullYear()
                             }
                         },
@@ -170,9 +172,9 @@ exports.rating = (req,res) => {
                                 
                             }
                         },
-                        {
-                            $project:{ _id:1, area:"$area" ,totalSum:1,totalOrders:1}
-                        }
+                        // {
+                        //     $project:{ _id:1,totalSum:1,totalOrders:1}
+                        // }
 
                     ])
                     .then(data=> {
@@ -207,34 +209,29 @@ exports.monthlySales = (req,res) => {
                         [   
                             {
                                 $match :{
-                                    salesrepName:salesrep.fullName,
+                                    salesrepName:salesrep.userName,
                                 }
                             },
                             {
                                 "$project" : { 
                                     "salesMonth" :{"$month" :"$orderDate"},
                                     "salesYear":{"$year":"$orderDate"},
-                                    //totalSum:1
+                                    "total":"$totalValue"
                                 }
                             },
                             {
                                 $group : {
                                     _id:"$salesMonth",
-                                    totalSum:{$sum:"$totalValue"}
+                                    totalSum:{$sum:"$total"}
                                 }
                             },
                             {$sort : {salesMonth:1}}
                         ]
                     )        
-                        // .exec((error,docs) =>{
-                        //     if(error)
-                        //         console.log(error);
-                        //     console.log(docs);
-                        //     res.status(200).json(docs);
                         
                     .then(data=> {
-                        //console.log("monthly data");
-                        //console.log(data);
+                       // console.log("monthly data");
+                       // console.log(data);
                         return res.status(200).json(data);
                     })
                     .catch(err => {
