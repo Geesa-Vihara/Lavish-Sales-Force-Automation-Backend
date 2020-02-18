@@ -10,7 +10,7 @@ exports.add = (req,res) => {
         .findOne({shop : req.body.shop})
         .then(customer => {
             if(customer){
-                return res.status(404).json({shop:'Already exists'});
+                return res.status(404).json({shop:'Customer Already exists'});
             }
             else{
                 const customer = new Customer({

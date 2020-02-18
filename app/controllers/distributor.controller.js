@@ -12,7 +12,7 @@ exports.add = (req,res) => {
         .findOne({userName : req.body.userName})
         .then(distributor => {
             if(distributor){
-                return res.status(404).json({userName:'Already exists'});
+                return res.status(404).json({userName:'Distributor Already exists'});
             }
             else{
                 const distributor = new Distributor({

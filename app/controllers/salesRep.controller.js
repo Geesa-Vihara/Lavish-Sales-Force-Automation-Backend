@@ -16,7 +16,7 @@ exports.add = (req,res) => {
         .findOne({userName : req.body.userName})
         .then(salesrep => {
             if(salesrep){
-                return res.status(404).json({SalesRepname:'Already exists' });
+                return res.status(404).json({userName:'User Name Already exists' });
             }
             else{
                 const salesRep = new SalesRep({           //const salesRep = new salesRep(req.body)
