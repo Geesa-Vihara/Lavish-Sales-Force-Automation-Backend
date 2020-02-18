@@ -150,7 +150,7 @@ exports.topOutlet = (req,res) =>{
                 },
                 {
                     $group : {
-                        _id : '$CustomerAddress', 
+                        _id : '$customerName', 
                       //  area:"$CustomerAddress",                 
                         totalSum:{$sum:'$totalValue'}           // total revenue from outlet
                     }
@@ -162,13 +162,13 @@ exports.topOutlet = (req,res) =>{
                     $limit : 10
                 },
                 {
-                    $project:{ _id:1, area:"$CustomerAddress" }
+                    $project:{ _id:1, area:"$CustomerAddress",totalSum:1 }
                 }
             ]
         )
         .then(data=>{
-            console.log("topOutlets")
-            console.log(data)
+           // console.log("topOutlets")
+          //  console.log(data)
             return res.status(200).json(data);
         })
         .catch(err =>{
