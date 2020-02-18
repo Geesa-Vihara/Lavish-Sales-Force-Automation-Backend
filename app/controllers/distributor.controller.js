@@ -12,7 +12,7 @@ exports.add = (req,res) => {
         .findOne({userName : req.body.userName})
         .then(distributor => {
             if(distributor){
-                return res.status(400).json({userName:'Already exists'});
+                return res.status(404).json({userName:'Already exists'});
             }
             else{
                 const distributor = new Distributor({
@@ -83,7 +83,6 @@ exports.delete = (req,res) => {
         .findByIdAndUpdate(req.params.id,{status:req.body.status},{new:true})
         .then(distributor => {
             if(distributor){
-                //distributor.remove();
                 res.status(200).json({distributor : ' Deleted successfuly !'});
             }
             else{

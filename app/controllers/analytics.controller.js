@@ -150,8 +150,7 @@ exports.topOutlet = (req,res) =>{
                 },
                 {
                     $group : {
-                        _id : '$customerName', 
-                      //  area:"$CustomerAddress",                 
+                        _id : '$customerName',                 
                         totalSum:{$sum:'$totalValue'}           // total revenue from outlet
                     }
                 },
@@ -201,9 +200,7 @@ exports.topBestSalesrep = (req,res)=> {
                 // },
                 {
                     $group : {
-                        _id : '$salesrepName',
-                        //name:"$salesrepName"
-                       // area:"$area",                  
+                        _id : '$salesrepName',                 
                         totalSum:{$sum:'$totalValue'}           
                     }
                 },
@@ -213,9 +210,9 @@ exports.topBestSalesrep = (req,res)=> {
                 {
                      $limit : 10
                 },
-                {
-                    $project:{ _id:1, area:"$CustomerAddress" }
-                }
+                // {
+                //     $project:{ _id:1, area:"$CustomerAddress" }
+                // }
             ]
         )
         .then(data=>{
@@ -230,12 +227,7 @@ exports.topLeastSalesrep = (req,res)=> {
     Invoice
         .aggregate(
             [
-                // {
-                //     $match:{status:"active"}
-                // },
-                // {
-                //     $sort:{totalOrders:1}
-                // },
+                
                 {
                     $group : {
                         _id : '$salesrepName',                  
@@ -245,9 +237,9 @@ exports.topLeastSalesrep = (req,res)=> {
                 {
                     $sort:{totalSum:1}
                 },
-                {
-                    $project:{ _id:1, area:"$CustomerAddress" }
-                },
+                // {
+                //     $project:{ _id:1, area:"$CustomerAddress" }
+                // },
                 {
                      $limit : 10
                 }

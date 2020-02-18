@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const SalesRep = require("../models/salesRep.model.js");
-const Customer = require("../models/customer.model");
+//const Customer = require("../models/customer.model");
 const Order = require("../models/invoice.model");
 const validateAddSalesrep=require("../validation/salesrepAdd.validation.js");
 const validateUpdateSalesrep=require("../validation/salesrepUpdate.validation.js");
@@ -96,13 +96,7 @@ exports.delete = (req,res) => {
         .findByIdAndUpdate(req.params.id,{status:req.body.status},{new:true})
         .then(salesRep => {
             if(salesRep){
-                return res.status(200).json(salesRep);
-               // salesRep.remove()
-            //    salesRep
-            //         .save()
-            //         .then(res.status(200).json(salesRep)) 
-            //         .catch(err=>{return res.status(400).json(err)});                
-                //return res.status(200).json({'salesRep' : 'salesRep deleted successfuly !'});   
+                return res.status(200).json(salesRep); 
             }
             else{
                 return res.status(404).send("cannot find salesRep with given id");
@@ -149,7 +143,7 @@ exports.getbyId = (req,res)=>{
 
 
 exports.rating = (req,res) => {
-    var date = new Date();
+ //   var date = new Date();
      SalesRep
          .findById(req.params.id)
          .then(salesrep =>{
@@ -199,7 +193,7 @@ exports.rating = (req,res) => {
     
 
 exports.monthlySales = (req,res) => {
-    var date = new Date();
+ //   var date = new Date();
     SalesRep
         .findById(req.params.id)
         .then(salesrep => {
