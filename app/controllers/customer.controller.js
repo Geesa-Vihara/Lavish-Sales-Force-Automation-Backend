@@ -1,4 +1,3 @@
-const bcrypt = require("bcryptjs");
 const Customer = require("../models/customer.model");
 const validateCustomer = require("../validation/customer.validation");
 
@@ -11,7 +10,7 @@ exports.add = (req,res) => {
         .findOne({shop : req.body.shop})
         .then(customer => {
             if(customer){
-                return res.status(400).json({shop:'Already exists'});
+                return res.status(404).json({shop:'Customer Already exists'});
             }
             else{
                 const customer = new Customer({
@@ -32,21 +31,7 @@ exports.add = (req,res) => {
                 .catch(err => {
                     console.log(err);
                 });
-                /*bcrypt.genSalt(10,(err,salt) => {
-                    bcrypt.hash(customer.password,salt,(err,hash) => {
-                        if(err)
-                            throw err;
-                        customer.password = hash; 
-                        customer
-                            .save()                   
-                            .then(customer => {
-                                res.status(200).json(customer);
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            });
-                   })
-                 }) */  
+              
             }
         })
         .catch(err => {
@@ -91,13 +76,6 @@ exports.delete = (req,res) => {
         .then(customer => {
             if(customer){
                 return res.status(200).json(customer);
-                //customer.remove();
-                //customer.status ="inactive";
-                // customer
-                //     .save()
-                //     .then(res.status(200).json(customer))
-                //     .catch(err=>{return res.status(400).json({err:"cannot remove customer"})});
-                //return res.status(200).json({customer : ' Removed successfuly !'});
             }
             else{
                 return res.status(404).send('cannot find customer with given id');
@@ -113,11 +91,6 @@ exports.getAll = (req,res) => {
     Customer
         .find({status:"active"})
         .then(customers => {
-            /*
-            filteredCustomers = customers.map((customer) => {
-                if(customer.statue == "active")
-            })
-            */
              return res.status(200).json(customers);
         })
         .catch(err => {
