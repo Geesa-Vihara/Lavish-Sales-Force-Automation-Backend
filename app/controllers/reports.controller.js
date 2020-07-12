@@ -12,10 +12,10 @@ exports.generateRep=(req,res)=>{
         { $match: { orderDate :{
             $gte: new Date(d),
             $lte: new Date(n)
-        },distUsername:{
+        },distName:{
             $ne:null
         }
-     } }, {"$group" : {_id:{ distUsername:"$distUsername",repName:"$salesrepName"}}}
+     } }, {"$group" : {_id:{ distUsername:"$distName",repName:"$salesrepName"}}}
       ])
         .then(rep=> res.status(200).json(rep)
         )
@@ -63,11 +63,11 @@ exports.generateRep=(req,res)=>{
             $gte: new Date(d),
             $lte: new Date(n)
         },
-        distUsername:{
+        distName:{
             $eq: req.body.distributor
         }
      } }, {$group : {
-        _id: { distUsername:req.body.distributor,repName:"$salesrepName"},       
+        _id: { distName:req.body.distributor,repName:"$salesrepName"},       
 
   }}
       ])
@@ -118,7 +118,7 @@ exports.byDist=(req,res)=>{
          { $match: { orderDate :{
              $gte: new Date(d),
              $lte: new Date(n)
-         },distUsername:{
+         },distName:{
              $eq:req.body.distributor
          }
       } },{$group : {
@@ -128,7 +128,7 @@ exports.byDist=(req,res)=>{
         currdate:{$first:{ $dateToString: { format: "%Y-%m-%d", date: new Date(), timezone: 'Asia/Colombo' } }},
         Invoiceno :{$first:"$Invoiceno"},
         salesrepName:{$first:"$salesrepName"},
-        distUsername:{$first:"$distUsername"},       
+        distUsername:{$first:"$distName"},       
         orderDate:  {$first:{ $dateToString: { format: "%Y-%m-%d", date: '$orderDate', timezone: 'Asia/Colombo'} }},
         area:{$first:"$area"},
         route:{$first:"$route"}, 
