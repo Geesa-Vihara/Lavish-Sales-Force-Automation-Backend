@@ -1,3 +1,6 @@
+const mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+Stockbal=mongoose.model('stockbalnaces', new Schema(), 'stockbalnaces');
 exports.generateRep=(req,res)=>{
     
    if(req.body.type==="sales" && req.body.distributor==="All"){
@@ -9,10 +12,10 @@ exports.generateRep=(req,res)=>{
         { $match: { orderDate :{
             $gte: new Date(d),
             $lte: new Date(n)
-        },distUsername:{
+        },distName:{
             $ne:null
         }
-     } }, {"$group" : {_id:{ distUsername:"$distUsername",repName:"$salesrepName"}}}
+     } }, {"$group" : {_id:{ distUsername:"$distName",repName:"$salesrepName"}}}
       ])
         .then(rep=> res.status(200).json(rep)
         )
@@ -26,20 +29,20 @@ exports.generateRep=(req,res)=>{
     var n = new Date(req.body.date);
     d.setUTCHours(0,0,0,0);
     n.setUTCHours(24,0,0,0);
-    Stock.aggregate([        
+    Stockbal.aggregate([        
         
         { $match: { dateandtime :{
             $gte: new Date(d),
             $lt: new Date(n)
-        } } },{"$group" : {
+        } } } ,{"$group" : {
             _id: { distname:"$distname"},
             currdate:{$first:{ $dateToString: { format: "%Y-%m-%d", date: '$dateandtime', timezone: 'Asia/Colombo'} }},
             hour: {$first:{ $hour: {date: '$dateandtime', timezone: 'Asia/Colombo'} }},
             minutes: {$first:{ $minute: {date: '$dateandtime', timezone: 'Asia/Colombo'} }},
             repname:{$first:"$repname"},
-            stockno:{$first:"$stockno"},
+            stockno:{$first:"$stockblanceno"},
 
-            }}
+            }} 
       ])
         .then(rep=> 
             res.status(200).json(rep)
@@ -60,11 +63,11 @@ exports.generateRep=(req,res)=>{
             $gte: new Date(d),
             $lte: new Date(n)
         },
-        distUsername:{
+        distName:{
             $eq: req.body.distributor
         }
      } }, {$group : {
-        _id: { distUsername:req.body.distributor,repName:"$salesrepName"},       
+        _id: { distName:req.body.distributor,repName:"$salesrepName"},       
 
   }}
       ])
@@ -80,7 +83,7 @@ exports.generateRep=(req,res)=>{
     var n = new Date(req.body.date);
     d.setUTCHours(0,0,0,0);
     n.setUTCHours(24,0,0,0);
-    Stock.aggregate([        
+    Stockbal.aggregate([        
         
         { $match: { dateandtime :{
             $gte: new Date(d),
@@ -115,7 +118,7 @@ exports.byDist=(req,res)=>{
          { $match: { orderDate :{
              $gte: new Date(d),
              $lte: new Date(n)
-         },distUsername:{
+         },distName:{
              $eq:req.body.distributor
          }
       } },{$group : {
@@ -125,7 +128,7 @@ exports.byDist=(req,res)=>{
         currdate:{$first:{ $dateToString: { format: "%Y-%m-%d", date: new Date(), timezone: 'Asia/Colombo' } }},
         Invoiceno :{$first:"$Invoiceno"},
         salesrepName:{$first:"$salesrepName"},
-        distUsername:{$first:"$distUsername"},       
+        distUsername:{$first:"$distName"},       
         orderDate:  {$first:{ $dateToString: { format: "%Y-%m-%d", date: '$orderDate', timezone: 'Asia/Colombo'} }},
         area:{$first:"$area"},
         route:{$first:"$route"}, 
@@ -153,7 +156,7 @@ exports.byDist=(req,res)=>{
             var n = new Date(req.body.date);
             d.setUTCHours(0,0,0,0);
             n.setUTCHours(24,0,0,0);
-            Stock.aggregate([
+            Stockbal.aggregate([
                 { $match: { dateandtime :{
                     $gte: new Date(d),
                     $lt: new Date(n)
